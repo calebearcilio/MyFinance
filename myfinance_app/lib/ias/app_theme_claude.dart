@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/text_theme_claude.dart';
+import 'package:myfinance_app/ias/text_theme_claude.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MyFinance Color Tokens

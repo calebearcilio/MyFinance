@@ -125,6 +125,8 @@ class AppTheme {
     final muted = colorBase.withAlpha(102);
 
     return TextTheme(
+      // ── Display ─────────────────────────────────────────────────────────
+      // Usado em: tela de splash, saldo total (hero number)
       displayLarge: TextStyle(
         fontFamily: sans,
         fontSize: 57,
@@ -290,8 +292,6 @@ class AppTheme {
       ),
 
       cardTheme: CardThemeData(
-        margin: const EdgeInsets.all(10),
-
         color: cs.surfaceContainer,
         elevation: 0,
         shape: RoundedRectangleBorder(

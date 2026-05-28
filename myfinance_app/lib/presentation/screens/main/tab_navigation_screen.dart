@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/screens/main/buget_screen.dart';
-import 'package:myfinance_app/screens/main/home_screen.dart';
-import 'package:myfinance_app/screens/main/report_screen.dart';
-import 'package:myfinance_app/screens/main/transactions_screen.dart';
+import 'package:myfinance_app/presentation/screens/main/buget_screen.dart';
+import 'package:myfinance_app/presentation/screens/main/home_screen.dart';
+import 'package:myfinance_app/presentation/screens/main/report_screen.dart';
+import 'package:myfinance_app/presentation/screens/main/transactions_screen.dart';
 
 class TabNavigationScreen extends StatefulWidget {
   const TabNavigationScreen({super.key});
@@ -19,6 +19,7 @@ class _TabNavigationScreenState extends State<TabNavigationScreen> {
     BugetScreen(),
     ReportScreen(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

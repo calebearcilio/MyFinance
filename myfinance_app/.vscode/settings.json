@@ -1,0 +1,11 @@
+{
+  "files.exclude": {
+    "**/.dart_tool": true,
+    "**/.flutter-plugins-dependencies": true,
+    "**/.github": true,
+    "**/.metadata": true,
+    "**/analysis_options.yaml": true,
+    "**/android": true,
+    "**/pubspec.lock": true
+  }
+}

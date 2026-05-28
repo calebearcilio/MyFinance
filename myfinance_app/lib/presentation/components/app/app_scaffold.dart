@@ -27,7 +27,7 @@ class AppScaffold extends StatelessWidget {
           children: [
             Text(
               DateFormat("MMMM y").format(DateTime.now()).toUpperCase(),
-              style: Theme.of(context).textTheme.labelMedium,
+              style: themeContext.textTheme.labelMedium,
             ),
             Text(title),
           ],

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/components/app/app_scaffold.dart';
-import 'package:myfinance_app/components/charts/home_chart.dart';
-import 'package:myfinance_app/components/home_card.dart';
-import 'package:myfinance_app/components/transaction/transaction_list.dart';
+import 'package:myfinance_app/presentation/components/app/app_scaffold.dart';
+import 'package:myfinance_app/presentation/components/charts/home_chart.dart';
+import 'package:myfinance_app/presentation/components/home_card.dart';
+import 'package:myfinance_app/presentation/components/transaction/transaction_list.dart';
+import 'package:myfinance_app/models/category.dart';
 import 'package:myfinance_app/models/transaction.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -43,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text("Transações recentes"),
             ),
 
-            TransactionList(transactions: recentTransactions),
+            TransactionList(transactions: recentTransactions, categories: defaultCategries,),
           ],
         ),
       ),

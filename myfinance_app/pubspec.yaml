@@ -2,6 +2,8 @@ name: myfinance_app
 description: "A new Flutter project."
 publish_to: "none"
 version: 0.1.0+1
+config_name:
+  name: "MyFinance"
 
 environment:
   sdk: ^3.12.0
@@ -13,11 +15,14 @@ dependencies:
   uuid: ^4.5.3
   google_fonts: ^8.1.0
   fl_chart: ^1.2.0
+  sqflite: ^2.4.2+1
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  rename_app: ^1.6.6
 
 flutter:
   uses-material-design: true
