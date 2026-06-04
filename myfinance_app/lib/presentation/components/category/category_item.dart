@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/models/category.dart';
+import 'package:myfinance_app/domain/models/category.dart';
 
 class CategoryItem extends StatelessWidget {
   final Category category;
@@ -23,8 +23,8 @@ class CategoryItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(99),
         ),
         color: isSelected ? category.color.withAlpha(200) : null,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(99),
+        child: GestureDetector(
+          // borderRadius: BorderRadius.circular(99),
           onLongPress: onLongPress,
           onTap: onTap,
           child: Row(

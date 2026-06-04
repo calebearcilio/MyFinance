@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance_app/presentation/components/category/category_item.dart';
-import 'package:myfinance_app/models/category.dart';
+import 'package:myfinance_app/domain/models/category.dart';
 
 class CategoryList extends StatelessWidget {
   final List<Category> categories;

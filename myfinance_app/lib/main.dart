@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:myfinance_app/app.dart';
+import 'package:myfinance_app/data/services_locator.dart';
+import 'package:myfinance_app/data/seed/dummy_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +14,11 @@ void main() async {
   // Definir o locale padrão do Intl
   Intl.defaultLocale = systemLocale.toString();
 
-  // Inicialliza os dados de formatação
+  // Inicializar os dados de formatação
   await initializeDateFormatting(systemLocale.toString());
+
+  // Inicializar banco de dados e repositórios
+  await ServiceLocator.init(dummyTransactions);
+
   runApp(App(locale: systemLocale));
 }

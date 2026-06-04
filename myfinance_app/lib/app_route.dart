@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/presentation/screens/main/tab_navigation_screen.dart';
+import 'package:myfinance_app/presentation/screens/tabs_screens/tab_navigation_screen.dart';
 import 'package:myfinance_app/presentation/screens/profile_screen.dart';
 
 abstract class AppRoutes {

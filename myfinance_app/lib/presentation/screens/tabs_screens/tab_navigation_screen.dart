@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/presentation/screens/main/buget_screen.dart';
-import 'package:myfinance_app/presentation/screens/main/home_screen.dart';
-import 'package:myfinance_app/presentation/screens/main/report_screen.dart';
-import 'package:myfinance_app/presentation/screens/main/transactions_screen.dart';
+import 'package:myfinance_app/presentation/screens/tabs_screens/buget_screen.dart';
+import 'package:myfinance_app/presentation/screens/tabs_screens/home_screen.dart';
+import 'package:myfinance_app/presentation/screens/tabs_screens/report_screen.dart';
+import 'package:myfinance_app/presentation/screens/tabs_screens/transactions_screen.dart';
 
 class TabNavigationScreen extends StatefulWidget {
   const TabNavigationScreen({super.key});

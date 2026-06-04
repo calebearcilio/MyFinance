@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance_app/presentation/components/transaction/transaction_item.dart';
-import 'package:myfinance_app/models/category.dart';
-import 'package:myfinance_app/models/transaction.dart';
+import 'package:myfinance_app/domain/models/category.dart';
+import 'package:myfinance_app/domain/models/transaction.dart';
+import 'package:myfinance_app/presentation/screens/tabs_screens/home_screen.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Category> categories;
@@ -28,11 +29,15 @@ class TransactionList extends StatelessWidget {
             itemCount: transactions.length,
             itemBuilder: (context, index) {
               final tr = transactions[index];
+              final category = categories.firstWhereOrNull(
+                (cat) => cat.id == tr.categoryId,
+              );
+
+              if (category == null) return const SizedBox();
+
               return TransactionItem(
                 transaction: tr,
-                category: defaultCategries.firstWhere(
-                  (cat) => cat.id == tr.categoryId,
-                ),
+                category: category,
                 onTap: () =>
                     print("Mostrar informações da transação: ${tr.title}"),
                 onLongPress: () => print("Editando transação: ${tr.title}"),

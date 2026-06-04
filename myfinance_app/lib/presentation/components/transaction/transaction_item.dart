@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfinance_app/models/category.dart';
-import 'package:myfinance_app/models/transaction.dart';
+import 'package:myfinance_app/domain/models/category.dart';
+import 'package:myfinance_app/domain/models/transaction.dart';
 import 'package:myfinance_app/utils/date_formatter_extension.dart';
 
 class TransactionItem extends StatelessWidget {

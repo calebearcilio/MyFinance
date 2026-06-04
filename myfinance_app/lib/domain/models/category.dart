@@ -1,8 +1,10 @@
-import 'dart:convert';
+// import 'dart:convert';
 import 'package:flutter/material.dart';
 
 enum CategoryType { income, expense }
 
+/// Modelo de domínio para Category
+/// Mantém a compatibilidade com a camada de apresentação
 class Category {
   final String id;
   final String name;
@@ -17,6 +19,23 @@ class Category {
     required this.color,
     required this.type,
   });
+
+  /// Factory para criar Category a partir de CategoryData do Drift
+  factory Category.fromDriftData({
+    required String id,
+    required String name,
+    required IconData icon,
+    required Color color,
+    required CategoryType type,
+  }) {
+    return Category(
+      id: id,
+      name: name,
+      icon: icon,
+      color: color,
+      type: type,
+    );
+  }
 
   Category copyWith({
     String? id,
@@ -33,13 +52,13 @@ class Category {
       type: type ?? this.type,
     );
   }
-
+/*
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
       'name': name,
       'icon': icon.codePoint,
-      'color': color.toARGB32(),
+      'color': color.value,
       'type': type.name,
     };
   }
@@ -58,10 +77,10 @@ class Category {
 
   factory Category.fromJson(String source) =>
       Category.fromMap(json.decode(source) as Map<String, dynamic>);
-
+*/
   @override
   String toString() {
-    return 'Category(id: $id, name: $name, icon: $icon, color: $color), type: $type';
+    return 'Category(id: $id, name: $name, icon: $icon, color: $color, type: $type)';
   }
 
   @override
@@ -78,55 +97,3 @@ class Category {
   @override
   int get hashCode => Object.hash(id, name, icon, color, type);
 }
-
-final List<Category> defaultCategries = [
-  Category(
-    id: "all",
-    name: "Tudo",
-    icon: Icons.category,
-    color: const Color.fromARGB(255, 110, 155, 115),
-    type: .expense
-  ),
-  Category(
-    id: "food",
-    name: "Alimentação",
-    icon: Icons.restaurant_menu,
-    color: const Color.fromARGB(255, 226, 75, 74),
-    type: .expense
-  ),
-  Category(
-    id: "transport",
-    name: "Transporte",
-    icon: Icons.directions_car,
-    color: const Color.fromARGB(255, 55, 138, 221),
-    type: .expense
-  ),
-  Category(
-    id: "health",
-    name: "Saúde",
-    icon: Icons.medical_services,
-    color: const Color.fromARGB(255, 29, 158, 117),
-    type: .expense
-  ),
-  Category(
-    id: "education",
-    name: "Educação",
-    icon: Icons.school,
-    color: const Color.fromARGB(255, 127, 119, 221),
-    type: .expense
-  ),
-  Category(
-    id: "leisure",
-    name: "Lazer",
-    icon: Icons.fitness_center,
-    color: const Color.fromARGB(255, 239, 159, 39),
-    type: .expense
-  ),
-  Category(
-    id: "shopping",
-    name: "Compras",
-    icon: Icons.shopping_cart_sharp,
-    color: const Color.fromARGB(255, 212, 83, 126),
-    type: .expense
-  ),
-];
