@@ -3,7 +3,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:myfinance_app/app.dart';
 import 'package:myfinance_app/data/services_locator.dart';
-import 'package:myfinance_app/data/seed/dummy_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +17,8 @@ void main() async {
   await initializeDateFormatting(systemLocale.toString());
 
   // Inicializar banco de dados e repositórios
-  await ServiceLocator.init(dummyTransactions);
+  await ServiceLocator.init();
+  await ServiceLocator.database.resetDatabase();
 
   runApp(App(locale: systemLocale));
 }

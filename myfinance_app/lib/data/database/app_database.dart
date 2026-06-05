@@ -8,6 +8,7 @@ import 'package:myfinance_app/data/database/daos/transaction_dao.dart';
 import 'package:myfinance_app/data/seed/categories_default.dart';
 import 'package:myfinance_app/data/database/tables/category_table.dart';
 import 'package:myfinance_app/data/database/tables/transaction_table.dart';
+import 'package:myfinance_app/data/seed/dummy_data.dart';
 import 'package:myfinance_app/domain/models/category.dart';
 import 'package:myfinance_app/domain/models/transaction.dart';
 import 'package:path_provider/path_provider.dart';
@@ -38,8 +39,9 @@ class AppDatabase extends _$AppDatabase {
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
-      onCreate: (Migrator m) async {
+      onCreate: (m) async {
         await m.createAll();
+        _onCreate();
       },
       onUpgrade: (Migrator m, int from, int to) async {
         // Migrations futuras serão adicionadas aqui
@@ -47,6 +49,36 @@ class AppDatabase extends _$AppDatabase {
         // if (from == 1) {
         //   await m.addColumn(transactions, transactions.newColumn);
         // }
+      },
+    );
+  }
+
+  /// Deleta o banco de dados (útil para testes)
+  Future<void> resetDatabase() async {
+    await delete(transactions).go();
+    await delete(categories).go();
+    await _onCreate();
+  }
+
+  Future<void> seedData() async {}
+
+  Future<void> _onCreate() async {
+    await batch(
+      (batch) {
+        batch.insertAll(
+          categories,
+          [
+            ...CategoriesDefault.income,
+            ...CategoriesDefault.expenses,
+          ],
+        );
+        batch.insertAll(
+          transactions,
+          [
+            ...DummyTransactions.income,
+            ...DummyTransactions.expenses,
+          ],
+        );
       },
     );
   }
@@ -60,47 +92,7 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
-  /// Inicia dados padrão se o banco estiver vazio
-  Future<bool> seedInitialData([
-    List<TransactionsCompanion>? transactions,
-  ]) async {
-    final categoryCount = await categoryDao.countCategories();
-
-    if (categoryCount == 0) {
-      final categoriesDefault = [
-        ...CategoriesDefault.expenses,
-        ...CategoriesDefault.income,
-      ];
-
-      await categoryDao.insertCategories(categoriesDefault);
-      return true;
-    }
-
-    if (transactions != null) {
-      final transactionCount = await transactionDao.countTransactions();
-      if (transactionCount == 0) {
-        await transactionDao.insertTransactions(transactions);
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   /*
-  /// Deleta o banco de dados (útil para testes)
-  Future<void> deleteDatabase() async {
-    final file = File(
-      p.join(
-        (await getApplicationDocumentsDirectory()).path,
-        'myfinance.db',
-      ),
-    );
-    if (await file.exists()) {
-      await file.delete();
-    }
-  }
-
   /// Exporta dados (para backup/debug)
   Future<void> exportData() async {
     final categories = await categoryDao.getAllCategories();

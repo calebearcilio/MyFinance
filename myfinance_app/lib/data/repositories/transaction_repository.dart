@@ -173,21 +173,4 @@ class TransactionRepository {
     );
     return value;
   }
-
-  /// Inicia dados fictícios
-  Future<void> seedInitialData([List<Transaction>? transactions]) async {
-    if (transactions != null) {
-      final driftData = transactions.map(_convertToDrift).toList();
-      final resutl = await _database.seedInitialData(driftData);
-
-      if (resutl) {
-        print("\n\nSeed de transações realizado.\n");
-        print("Transações:\n");
-        final transactionsDB = getAllTransactions();
-        print("$transactionsDB\n\n");
-      } else {
-        print("\n\nFalha no seed de transações\n");
-      }
-    }
-  }
 }

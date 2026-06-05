@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:myfinance_app/presentation/components/app/app_scaffold.dart';
 import 'package:myfinance_app/presentation/components/charts/home_chart.dart';
 import 'package:myfinance_app/presentation/components/home/home_card.dart';
-import 'package:myfinance_app/presentation/components/transaction/transaction_list.dart';
 import 'package:myfinance_app/domain/models/category.dart';
 import 'package:myfinance_app/domain/models/transaction.dart';
 import 'package:myfinance_app/data/services_locator.dart';

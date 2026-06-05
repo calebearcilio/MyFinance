@@ -115,17 +115,4 @@ class CategoryRepository {
   Future<int> countCategories() {
     return _database.categoryDao.countCategories();
   }
-
-  /// Inicia dados padrão
-  Future<void> seedInitialData() async {
-    final result = await _database.seedInitialData();
-    if (result) {
-      print("\n\nSeed de categorias realizado.\n");
-      print("Categorias:\n");
-      final categoriesDB = await getAllCategories();
-      print("$categoriesDB\n\n");
-    } else {
-      print("\n\nFalha no seed de categorias\n");
-    }
-  }
 }
