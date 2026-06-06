@@ -7,7 +7,6 @@ import 'package:myfinance_app/data/services_locator.dart';
 import 'package:myfinance_app/domain/category/category.dart';
 import 'package:myfinance_app/domain/transaction/transaction.dart';
 import 'package:myfinance_app/presentation/components/shared/loading_component.dart';
-import 'package:myfinance_app/utils/date/date_time_formatters.dart';
 
 class TransactionForm extends StatefulWidget {
   final Transaction? transactionToEdit;
@@ -35,13 +34,11 @@ class _TransactionFormState extends State<TransactionForm> {
 
   bool _isLoading = true;
 
-  String _dateFormat(DateTime? date) => date == null
-      ? "dd/MM/yyyy"
-      : DateFormat("dd/MM/yyyy").format(date);
+  String _dateFormat(DateTime? date) =>
+      date == null ? "dd/MM/yyyy" : DateFormat("dd/MM/yyyy").format(date);
 
-  String _timeFormat(DateTime? time) => time == null
-      ? "HH:mm"
-      : DateFormat("HH:mm").format(time);
+  String _timeFormat(DateTime? time) =>
+      time == null ? "HH:mm" : DateFormat("HH:mm").format(time);
 
   Future<void> _loadData() async {
     _categories = await _categoriesRepository.getAllCategories();
@@ -116,8 +113,8 @@ class _TransactionFormState extends State<TransactionForm> {
     try {
       final dateStr = _dateController.text;
       final timeStr = _timeController.text;
-      final dateTimeStr = "$dateStr $_timeController.text";
-      
+      final dateTimeStr = "$dateStr $timeStr";
+
       final transaction = Transaction(
         id: widget.transactionToEdit?.id,
         title: _titleController.text.trim(),
@@ -127,7 +124,9 @@ class _TransactionFormState extends State<TransactionForm> {
         value: double.parse(
           _valueController.text.replaceAll(".", "").replaceAll(",", "."),
         ),
-        date: DateFormat("dd/MM/yyyy HH:mm").parse(dateTimeStr),
+        date: DateFormat(
+          "${_dateFormat(null)} ${_timeFormat(null)}",
+        ).parse(dateTimeStr),
         type: _type,
         categoryId: _selectedCategoryId,
       );
@@ -173,7 +172,7 @@ class _TransactionFormState extends State<TransactionForm> {
     return TextFormField(
       keyboardType: inputType,
       controller: controller,
-      textInputAction: .next,
+      textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         labelText: label,
         prefixText: prefixText,
@@ -255,13 +254,14 @@ class _TransactionFormState extends State<TransactionForm> {
                   spacing: 12,
                   children: [
                     Expanded(
-                      flex: 2,
+                      flex: 3,
                       child: _textFieldBuild(
                         label: "Data*",
                         controller: _dateController,
                         inputType: TextInputType.number,
                         masks: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9/]')),
+                          FilteringTextInputFormatter.digitsOnly,
+                          DataInputFormatter(),
                         ],
                         suffixIcon: IconButton(
                           onPressed: _datePicker,
@@ -270,12 +270,14 @@ class _TransactionFormState extends State<TransactionForm> {
                       ),
                     ),
                     Expanded(
+                      flex: 2,
                       child: _textFieldBuild(
                         label: "Hora*",
                         controller: _timeController,
                         inputType: TextInputType.number,
                         masks: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9:]')),
+                          FilteringTextInputFormatter.digitsOnly,
+                          HoraInputFormatter(),
                         ],
                         suffixIcon: IconButton(
                           onPressed: _timePicker,
@@ -315,7 +317,9 @@ class _TransactionFormState extends State<TransactionForm> {
                 ),
 
                 DropdownButtonFormField<String>(
-                  initialValue: _categories.isEmpty ? null : _categories.first.id,
+                  initialValue: _categories.isEmpty
+                      ? null
+                      : _categories.first.id,
                   validator: _validateInput,
                   isExpanded: false,
                   decoration: const InputDecoration(
