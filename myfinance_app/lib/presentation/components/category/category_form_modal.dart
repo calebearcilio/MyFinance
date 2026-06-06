@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:myfinance_app/data/services_locator.dart';
-import 'package:myfinance_app/domain/models/category.dart';
+import 'package:myfinance_app/domain/category/category.dart';
 
 class CategoryFormModal extends StatefulWidget {
   const CategoryFormModal({super.key});
@@ -20,13 +20,18 @@ class _CategoryFormModalState extends State<CategoryFormModal> {
   CategoryType? _selectedType;
 
   final List<IconData> _availableIcons = [
+    Icons.category,
+    Icons.home,
+    Icons.wifi,
+    Icons.water_drop,
+    Icons.energy_savings_leaf,
+    Icons.engineering,
     Icons.restaurant_menu,
     Icons.directions_car,
     Icons.medical_services,
     Icons.school,
     Icons.fitness_center,
     Icons.shopping_cart_sharp,
-    Icons.category,
   ];
 
   final List<Color> _availableColors = [
@@ -110,27 +115,29 @@ class _CategoryFormModalState extends State<CategoryFormModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-        left: 20,
-        right: 20,
-        top: 20,
-      ),
-      child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
+    final themeContext = Theme.of(context);
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          left: 20,
+          right: 20,
+          top: 20,
+        ),
+        child: Form(
+          key: _formKey,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: .min,
+            crossAxisAlignment: .end,
             spacing: 20,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: .center,
                 children: [
                   Text(
                     "Nova Categoria",
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: themeContext.textTheme.titleLarge,
                   ),
                 ],
               ),
@@ -151,7 +158,7 @@ class _CategoryFormModalState extends State<CategoryFormModal> {
                 children: [
                   Text(
                     "Ícone",
-                    style: Theme.of(context).textTheme.labelLarge,
+                    style: themeContext.textTheme.labelLarge,
                   ),
                   SizedBox(
                     height: 60,
@@ -168,7 +175,7 @@ class _CategoryFormModalState extends State<CategoryFormModal> {
                             onTap: () => setState(() => _selectedIcon = icon),
                             child: CircleAvatar(
                               backgroundColor: isSelected
-                                  ? Theme.of(context).primaryColor
+                                  ? _selectedColor
                                   : Colors.grey.shade200,
                               child: Icon(
                                 icon,
@@ -187,7 +194,7 @@ class _CategoryFormModalState extends State<CategoryFormModal> {
                 children: [
                   Text(
                     "Cor",
-                    style: Theme.of(context).textTheme.labelLarge,
+                    style: themeContext.textTheme.labelLarge,
                   ),
                   SizedBox(
                     height: 60,
@@ -223,7 +230,7 @@ class _CategoryFormModalState extends State<CategoryFormModal> {
                 children: [
                   Text(
                     "Tipo",
-                    style: Theme.of(context).textTheme.labelLarge,
+                    style: themeContext.textTheme.labelLarge,
                   ),
                   Row(
                     children: [

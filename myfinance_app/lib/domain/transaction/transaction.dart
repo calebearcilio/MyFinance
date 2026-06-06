@@ -5,7 +5,7 @@ enum TransactionType { income, expense }
 /// Modelo de domínio para Transaction
 /// Mantém a compatibilidade com a camada de apresentação
 class Transaction {
-  final String id;
+  late String? id;
   final String title;
   final double value;
   final String? description;
@@ -14,7 +14,7 @@ class Transaction {
   final String categoryId;
 
   Transaction({
-    required this.id,
+    this.id,
     required this.title,
     required this.value,
     this.description,

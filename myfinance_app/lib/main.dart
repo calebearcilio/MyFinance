@@ -18,7 +18,6 @@ void main() async {
 
   // Inicializar banco de dados e repositórios
   await ServiceLocator.init();
-  await ServiceLocator.database.resetDatabase();
 
   runApp(App(locale: systemLocale));
 }

@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:myfinance_app/data/database/app_database.dart';
-import 'package:myfinance_app/domain/models/transaction.dart';
+import 'package:myfinance_app/domain/transaction/transaction.dart';
 
 /// Repository para Transaction
 /// Encapsula acesso aos dados e converte entre modelos Drift e domínio
@@ -25,7 +25,6 @@ class TransactionRepository {
   /// Converter Transaction (Domínio) para TransactionData (Drift)
   TransactionsCompanion _convertToDrift(Transaction transaction) {
     return TransactionsCompanion(
-      id: Value(transaction.id),
       title: Value(transaction.title),
       description: Value(transaction.description),
       value: Value(transaction.value),

@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:myfinance_app/data/database/app_database.dart';
 import 'package:myfinance_app/data/database/tables/category_table.dart';
 import 'package:myfinance_app/data/database/tables/transaction_table.dart';
-import 'package:myfinance_app/domain/models/transaction.dart';
+import 'package:myfinance_app/domain/transaction/transaction.dart';
 part 'transaction_dao.g.dart';
 
 /// DAO para operações com transações

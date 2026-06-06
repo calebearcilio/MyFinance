@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/domain/models/category.dart';
+import 'package:myfinance_app/domain/category/category.dart';
 
 class CategoryItem extends StatelessWidget {
   final Category category;
@@ -17,16 +17,15 @@ class CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(99),
-        ),
-        color: isSelected ? category.color.withAlpha(200) : null,
-        child: GestureDetector(
-          // borderRadius: BorderRadius.circular(99),
-          onLongPress: onLongPress,
-          onTap: onTap,
+    return GestureDetector(
+      onLongPress: onLongPress,
+      onTap: onTap,
+      child: SizedBox(
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(99),
+          ),
+          color: isSelected ? category.color.withAlpha(200) : null,
           child: Row(
             spacing: 5,
             children: [

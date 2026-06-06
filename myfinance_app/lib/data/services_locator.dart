@@ -1,6 +1,6 @@
 import 'package:myfinance_app/data/database/app_database.dart';
-import 'package:myfinance_app/domain/models/category.dart';
-import 'package:myfinance_app/domain/models/transaction.dart';
+import 'package:myfinance_app/domain/category/category.dart';
+import 'package:myfinance_app/domain/transaction/transaction.dart';
 import 'package:myfinance_app/data/repositories/category_repository.dart';
 import 'package:myfinance_app/data/repositories/transaction_repository.dart';
 

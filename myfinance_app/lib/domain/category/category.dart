@@ -6,7 +6,7 @@ enum CategoryType { income, expense }
 /// Modelo de domínio para Category
 /// Mantém a compatibilidade com a camada de apresentação
 class Category {
-  final String id;
+  late String id;
   final String name;
   final IconData icon;
   final Color color;

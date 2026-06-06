@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-import 'package:myfinance_app/domain/models/transaction.dart';
-import 'package:myfinance_app/domain/models/category.dart';
+import 'package:myfinance_app/domain/transaction/transaction.dart';
+import 'package:myfinance_app/domain/category/category.dart';
 import 'package:myfinance_app/data/services_locator.dart';
 
 class TransactionFormModal extends StatefulWidget {

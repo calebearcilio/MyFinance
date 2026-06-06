@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfinance_app/domain/models/category.dart';
-import 'package:myfinance_app/domain/models/transaction.dart';
-import 'package:myfinance_app/utils/date_formatter_extension.dart';
+import 'package:myfinance_app/domain/category/category.dart';
+import 'package:myfinance_app/domain/transaction/transaction.dart';
+import 'package:myfinance_app/utils/date/date_time_formatters.dart';
 
 class TransactionItem extends StatelessWidget {
   final Transaction transaction;
@@ -21,16 +21,16 @@ class TransactionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final valueFormate = NumberFormat.simpleCurrency().format(
-      transaction.signedValue,
+      transaction.value,
     );
     final themeContext = Theme.of(context);
 
     return Card(
       elevation: 5,
       child: ListTile(
-        shape: themeContext.cardTheme.shape,
         onTap: onTap,
         onLongPress: onLongPress,
+        shape: themeContext.cardTheme.shape,
         leading: Card(
           color: category.color,
           child: Padding(
@@ -60,10 +60,10 @@ class TransactionItem extends StatelessWidget {
 
         trailing: Text(
           valueFormate,
-          style: themeContext.textTheme.headlineSmall!.copyWith(
+          style: themeContext.textTheme.titleMedium!.copyWith(
             color: transaction.type == TransactionType.expense
-                ? themeContext.colorScheme.error
-                : themeContext.colorScheme.primary,
+                ? Colors.red
+                : Colors.green,
           ),
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 extension DateFormatter on DateTime {
   /// Formatar a data de forma amigável
@@ -30,3 +31,9 @@ extension DateFormatter on DateTime {
     return DateFormat("dd'/'MM'/'yyyy").format(this);
   }
 }
+
+final dateTimeMask = MaskTextInputFormatter(
+  mask: "##/##/#### ##:##",
+  filter: {"#" : RegExp(r'[0-9]')},
+  type: .lazy
+);

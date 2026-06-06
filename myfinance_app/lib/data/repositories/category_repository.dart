@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:myfinance_app/data/database/app_database.dart';
-import 'package:myfinance_app/domain/models/category.dart';
+import 'package:myfinance_app/domain/category/category.dart';
 
 /// Repository para Category
 /// Encapsula acesso aos dados e converte entre modelos Drift e domínio

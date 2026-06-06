@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myfinance_app/domain/transaction/transaction_update_dto.dart';
 import 'package:myfinance_app/presentation/components/app/app_scaffold.dart';
 import 'package:myfinance_app/presentation/components/category/category_form_modal.dart';
-import 'package:myfinance_app/domain/models/category.dart';
-import 'package:myfinance_app/domain/models/transaction.dart';
+import 'package:myfinance_app/domain/category/category.dart';
+import 'package:myfinance_app/domain/transaction/transaction.dart';
 import 'package:myfinance_app/data/services_locator.dart';
 import 'package:myfinance_app/presentation/components/category/category_list.dart';
+import 'package:myfinance_app/presentation/components/shared/loading_component.dart';
+import 'package:myfinance_app/presentation/components/transaction/transaction_form.dart';
 import 'package:myfinance_app/presentation/components/transaction/transaction_list.dart';
 
 class TransactionsScreen extends StatefulWidget {
@@ -15,10 +19,35 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
-  String selectedCategoryId = "all";
-
   final _categoryRepository = ServiceLocator.categoryRepository;
   final _transactionRepository = ServiceLocator.transactionRepository;
+  String _selectedCategoryId = "all";
+  bool _isLoading = true;
+  List<Transaction> _filteredTransactions = [];
+  List<Category> _categories = [];
+
+  Future<void> _loadData() async {
+    final categoriesDB = await _categoryRepository.getAllCategories();
+    await Future.delayed(Duration(milliseconds: 1500));
+    _categories = categoriesDB;
+    _filterTransactions(_selectedCategoryId);
+  }
+
+  /// Filtra as transações por [categoryId], mas se o usuário tocar novamente na mesma categoria, o filtro retorna todas as transações
+  void _filterTransactions(String categoryId) async {
+    setState(() => _isLoading = true);
+
+    if (_selectedCategoryId == categoryId) {
+      _selectedCategoryId = "all";
+      _filteredTransactions = await _transactionRepository.getAllTransactions();
+    } else {
+      _selectedCategoryId = categoryId;
+      _filteredTransactions = await _transactionRepository
+          .getTransactionsByCategory(_selectedCategoryId);
+    }
+
+    setState(() => _isLoading = false);
+  }
 
   void _createCategory(
     BuildContext ctx,
@@ -31,6 +60,68 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       },
     );
   }
+
+  void _createTransaction(BuildContext context) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => TransactionForm(),
+    );
+
+    if (!mounted) return;
+
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          result == true ? "Transação salca com sucesso" : "Operação cancelada",
+        ),
+      ),
+    );
+
+    Fluttertoast.showToast(msg: "TEste");
+  }
+
+  void _editTransaction(BuildContext context, Transaction transaction) {}
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AppScaffold(
+      title: "Transações",
+      onRefreshBody: _loadData,
+      body: CustomScrollView(
+        slivers: [
+          CategoryList(
+            categories: _categories,
+            selectedCategoryId: _selectedCategoryId,
+            onCreateCategory: _createCategory,
+            onDeleteCategory: (p0, p1) {},
+            onCategotyTap: _filterTransactions,
+          ),
+          _isLoading
+              ? SliverFillRemaining(child: LoadingComponent())
+              : TransactionList(
+                  transactions: _filteredTransactions,
+                  categories: _categories,
+                ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _createTransaction(context),
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+/*
+
+  
 
   void _deleteCategory(BuildContext ctx, Category cat) {
     showDialog(
@@ -86,128 +177,4 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
       },
     );
   }
-
-  @override
-  Widget build(BuildContext context) {
-    final categoryAll = Category(
-      id: "all",
-      name: "Todas",
-      icon: Icons.category,
-      color: Colors.blueAccent,
-      type: .expense,
-    );
-
-    return AppScaffold(
-      title: "Transações",
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: CustomScrollView(
-          slivers: [
-            // Categorias usando Stream
-            StreamBuilder<List<Category>>(
-              stream: _categoryRepository.watchAllCategories(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SliverToBoxAdapter(
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-
-                final categories = snapshot.data ?? [];
-
-                return CategoryList(
-                  categories: [categoryAll, ...categories],
-                  selectedCategoryId: selectedCategoryId,
-                  onCreateCategory: _createCategory,
-                  onDeleteCategory: _deleteCategory,
-                  onCategotyTap: (id) =>
-                      setState(() => selectedCategoryId = id),
-                );
-              },
-            ),
-
-            // Transações filtradas usando Stream
-            StreamBuilder<List<Transaction>>(
-              stream: selectedCategoryId == "all"
-                  ? _transactionRepository.watchAllTransactions()
-                  : _transactionRepository.watchTransactionsByCategory(
-                      selectedCategoryId,
-                    ),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SliverFillRemaining(
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-
-                final transactions = snapshot.data ?? [];
-
-                return StreamBuilder<List<Category>>(
-                  stream: _categoryRepository.watchAllCategories(),
-                  builder: (context, categorySnapshot) {
-                    final categories = categorySnapshot.data ?? [];
-
-                    return TransactionList(
-                      transactions: transactions,
-                      categories: categories,
-                    );
-                  },
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-extension FirstWhereOrNullExtension<T> on Iterable<T> {
-  T? firstWhereOrNull(bool Function(T element) test) {
-    try {
-      return firstWhere(test);
-    } catch (e) {
-      return null;
-    }
-  }
-}
-
-/*
-SliverList.builder(
-                      itemCount: transactions.length,
-                      itemBuilder: (context, index) {
-                        final tr = transactions[index];
-                        final category = categories.firstWhereOrNull(
-                          (cat) => cat.id == tr.categoryId,
-                        );
-
-                        if (category == null) return const SizedBox();
-
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: category.color,
-                            child: Icon(
-                              category.icon,
-                              color: Colors.white,
-                            ),
-                          ),
-                          title: Text(tr.title),
-                          subtitle: Text(category.name),
-                          trailing: Text(
-                            'R\$ ${tr.value.toStringAsFixed(2)}',
-                            style: TextStyle(
-                              color: tr.type == TransactionType.income
-                                  ? Colors.green
-                                  : Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onTap: () => print(
-                            "Mostrar informações da transação: ${tr.title}",
-                          ),
-                          onLongPress: () =>
-                              print("Editando transação: ${tr.title}"),
-                        );
-                      },
-                    );
 */

@@ -7,6 +7,11 @@ class AppScaffold extends StatelessWidget {
   final Widget body;
   final Widget? drawer;
   final Widget? floatingActionButton;
+  final Future<void> Function()? onRefreshBody;
+
+  Future<void> _onRefreshDefault() {
+    return Future.delayed(Duration(seconds: 3));
+  }
 
   const AppScaffold({
     super.key,
@@ -14,6 +19,7 @@ class AppScaffold extends StatelessWidget {
     required this.body,
     this.drawer,
     this.floatingActionButton,
+    this.onRefreshBody,
   });
 
   @override
@@ -43,7 +49,13 @@ class AppScaffold extends StatelessWidget {
         ],
       ),
       drawer: drawer,
-      body: body,
+      body: RefreshIndicator.adaptive(
+        onRefresh: onRefreshBody ?? _onRefreshDefault,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: body,
+        ),
+      ),
       floatingActionButton: floatingActionButton,
     );
   }

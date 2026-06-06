@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance_app/presentation/components/transaction/transaction_item.dart';
-import 'package:myfinance_app/domain/models/category.dart';
-import 'package:myfinance_app/domain/models/transaction.dart';
+import 'package:myfinance_app/domain/category/category.dart';
+import 'package:myfinance_app/domain/transaction/transaction.dart';
 import 'package:myfinance_app/presentation/screens/tabs_screens/home_screen.dart';
 
 class TransactionList extends StatelessWidget {

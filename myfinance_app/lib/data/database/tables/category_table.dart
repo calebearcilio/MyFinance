@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:myfinance_app/data/database/converters/color_converter.dart';
 import 'package:myfinance_app/data/database/converters/icon_converter.dart';
-import 'package:myfinance_app/domain/models/category.dart';
+import 'package:myfinance_app/domain/category/category.dart';
 import 'package:uuid/uuid.dart';
 
 @DataClassName('CategoryData')

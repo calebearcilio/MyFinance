@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance_app/presentation/components/category/category_item.dart';
-import 'package:myfinance_app/domain/models/category.dart';
+import 'package:myfinance_app/domain/category/category.dart';
 
 class CategoryList extends StatelessWidget {
   final List<Category> categories;
@@ -21,8 +21,9 @@ class CategoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: SizedBox(
+      child: Container(
         height: 50,
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: ListView.builder(
           scrollDirection: .horizontal,
           itemCount: categories.length + 1,

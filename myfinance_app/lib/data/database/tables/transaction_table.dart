@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import 'package:myfinance_app/domain/models/transaction.dart';
+import 'package:myfinance_app/domain/transaction/transaction.dart';
 import 'package:uuid/uuid.dart';
 import 'category_table.dart';
 
