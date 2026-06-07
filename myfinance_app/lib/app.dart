@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/app_route.dart';
-import 'package:myfinance_app/app_theme.dart';
+import 'package:myfinance_app/core/routes/app_route.dart';
+import 'package:myfinance_app/core/themes/app_theme.dart';
 
 class App extends StatelessWidget {
   final Locale locale;
