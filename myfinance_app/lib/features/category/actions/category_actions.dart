@@ -5,25 +5,25 @@ import 'package:myfinance_app/features/category/components/category_delete_dialo
 import 'package:myfinance_app/features/category/components/category_form.dart';
 
 class CategoryActions {
-  static Future<bool?> openForm(
+  static void openFormCreate(
     BuildContext context,
   ) async {
-    return showDialog<bool>(
+    showDialog<bool>(
       context: context,
       builder: (_) => const CategoryForm(),
     );
   }
 
-  static Future<bool?> openDeleteDialog(
+  static void openDeleteDialog(
     BuildContext context,
     Category category,
   ) async {
     if (category.isDefault) {
       Fluttertoast.showToast(msg: "Categorias padrão não podem ser excluídas ");
-      return false;
+      return;
     }
 
-    return showDialog<bool>(
+    showDialog<bool>(
       context: context,
       builder: (_) => CategoryDeleteDialog(category),
     );

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfinance_app/core/models/category/category.dart';
-import 'package:myfinance_app/core/services/services_locator.dart';
+import 'package:myfinance_app/features/category/service/category_service.dart';
 
 class CategoryDeleteDialog extends StatelessWidget {
   final Category categoryToDelete;
-  final _categoryRepository = ServiceLocator.categoryRepository;
-  CategoryDeleteDialog(this.categoryToDelete, {super.key});
+  const CategoryDeleteDialog(this.categoryToDelete, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,22 +21,14 @@ class CategoryDeleteDialog extends StatelessWidget {
           },
         ),
         TextButton(
+          onPressed: () {
+            CategoryService.delete(categoryToDelete);
+            Navigator.of(context).pop();
+          },
           child: Text(
             "Excluir",
             style: TextStyle(color: Theme.of(context).colorScheme.error),
           ),
-          onPressed: () async {
-            _categoryRepository
-                .deleteCategory(
-                  categoryToDelete.id,
-                )
-                .then(
-                  (value) {
-                    Navigator.of(context).pop();
-                    Fluttertoast.showToast(msg: "Categoria excluida");
-                  },
-                );
-          },
         ),
       ],
     );

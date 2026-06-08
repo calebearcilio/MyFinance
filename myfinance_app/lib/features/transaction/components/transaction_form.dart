@@ -10,14 +10,16 @@ import 'package:myfinance_app/core/models/category/category.dart';
 import 'package:myfinance_app/core/models/transaction/transaction.dart';
 import 'package:myfinance_app/features/common/components/app_forms.dart';
 import 'package:myfinance_app/features/common/components/loading_component.dart';
+import 'package:myfinance_app/features/transaction/service/transaction_service.dart';
 
 class TransactionForm extends StatefulWidget {
   final Transaction? transaction;
-  final bool isReadOnly;
+  final FormMode mode;
+
   const TransactionForm({
     super.key,
     this.transaction,
-    this.isReadOnly = false,
+    required this.mode,
   });
 
   @override
@@ -28,17 +30,13 @@ class _TransactionFormState extends State<TransactionForm> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _valueController = TextEditingController(
-    text: "0,00",
-  );
+  final _valueController = TextEditingController(text: "0,00");
   final _dateController = TextEditingController();
   final _timeController = TextEditingController();
-  List<Category> _categories = [];
   late String _selectedCategoryId;
   TransactionType _selectedType = TransactionType.expense;
 
-  final _transactionRepository = ServiceLocator.transactionRepository;
-  final _categoriesRepository = ServiceLocator.categoryRepository;
+  List<Category> _categories = [];
 
   bool _isLoading = true;
 
@@ -49,7 +47,7 @@ class _TransactionFormState extends State<TransactionForm> {
       time == null ? "HH:mm" : DateFormat("HH:mm").format(time);
 
   Future<void> _loadData() async {
-    _categories = await _categoriesRepository.getAll();
+    _categories = await ServiceLocator.categoryRepository.getAll();
 
     final transaction = widget.transaction;
 
@@ -122,7 +120,6 @@ class _TransactionFormState extends State<TransactionForm> {
       final dateStr = _dateController.text;
       final timeStr = _timeController.text;
       final dateTimeStr = "$dateStr $timeStr";
-      final bool result;
 
       if (widget.transaction == null) {
         final transaction = TransactionCreate(
@@ -140,7 +137,7 @@ class _TransactionFormState extends State<TransactionForm> {
           categoryId: _selectedCategoryId,
         );
 
-        result = await _transactionRepository.insert(transaction);
+        await TransactionService.create(transaction);
       } else {
         final transaction = TransactionUpdate(
           id: widget.transaction!.id,
@@ -155,10 +152,12 @@ class _TransactionFormState extends State<TransactionForm> {
           type: _selectedType,
           categoryId: _selectedCategoryId,
         );
-        result = await _transactionRepository.update(transaction);
+
+        print(transaction);
+        await TransactionService.update(transaction);
       }
       if (mounted) {
-        Navigator.pop(context, result);
+        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
@@ -187,6 +186,9 @@ class _TransactionFormState extends State<TransactionForm> {
   Widget build(BuildContext context) {
     final themeContext = Theme.of(context);
     final availableWidth = MediaQuery.of(context).size.width;
+    final isCreate = widget.mode == .create;
+    final isEdit = widget.mode == .edit;
+    final isReadOnly = widget.mode == .read;
 
     if (_isLoading) return const LoadingComponent();
 
@@ -203,11 +205,11 @@ class _TransactionFormState extends State<TransactionForm> {
               spacing: 16,
               children: [
                 Text(
-                  widget.transaction == null
+                  isCreate
                       ? "Adicionando Transação"
-                      : widget.isReadOnly
-                      ? "Detalhes da Transação"
-                      : "Editando Transação",
+                      : isEdit
+                      ? "Editando Transação"
+                      : "Detalhes da Transação",
                   style: themeContext.textTheme.headlineSmall,
                 ),
 
@@ -276,7 +278,7 @@ class _TransactionFormState extends State<TransactionForm> {
 
                 AppRadioGroup<TransactionType>(
                   selectedValue: _selectedType,
-                  onChanged: widget.isReadOnly
+                  onChanged: widget.mode == .read
                       ? (value) {}
                       : (value) {
                           setState(() {
@@ -296,7 +298,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   decoration: const InputDecoration(
                     labelText: "Categoria*",
                   ),
-                  onChanged: widget.isReadOnly
+                  onChanged: isReadOnly
                       ? (value) {}
                       : (value) {
                           setState(() {
@@ -323,7 +325,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   }).toList(),
                 ),
 
-                if (!widget.isReadOnly) AppActionsButtons(onSubmit: _onSave),
+                if (!isReadOnly) AppActionsButtons(onSubmit: _onSave),
               ],
             ),
           ),

@@ -41,7 +41,7 @@ class _TransactionsScreenState extends State<TransactionsPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => TransactionActions.create(context),
+        onPressed: () => TransactionActions.openFormCreate(context),
         child: const Icon(Icons.add),
       ),
     );

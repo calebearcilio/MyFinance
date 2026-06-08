@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:myfinance_app/features/common/components/loading_component.dart';
 
 /// Modo do formulário: edit, create, update
-enum FormMode { edit, create, update }
+enum FormMode { read, edit, create, update }
 
 /// Campo de input padronizado do app
 class AppTextFormField extends StatelessWidget {

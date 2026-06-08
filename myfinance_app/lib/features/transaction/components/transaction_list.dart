@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance_app/core/services/services_locator.dart';
-import 'package:myfinance_app/features/common/components/loading_component.dart';
 import 'package:myfinance_app/features/transaction/actions/transaction_actions.dart';
 import 'package:myfinance_app/features/transaction/components/transaction_item.dart';
 import 'package:myfinance_app/core/models/transaction/transaction.dart';
 import 'package:myfinance_app/core/models/transaction/transaction_filter.dart';
+import 'package:myfinance_app/features/transaction/service/transaction_service.dart';
 
 class TransactionList extends StatefulWidget {
   final TransactionFilter filter;
@@ -21,14 +21,7 @@ class _TransactionListState extends State<TransactionList> {
     return StreamBuilder<List<Transaction>>(
       stream: ServiceLocator.transactionRepository.watchAll(widget.filter),
       builder: (context, snapshot) {
-        if (!snapshot.hasData || snapshot.hasError) {
-          return SliverToBoxAdapter(
-            child: LoadingComponent(),
-          );
-        }
-
         final transactions = snapshot.data!;
-
         if (transactions.isEmpty) {
           return SliverFillRemaining(
             child: Center(
@@ -65,12 +58,11 @@ class _TransactionListState extends State<TransactionList> {
                   ),
                 ),
               ),
-              onDismissed: (direction) =>
-                  TransactionActions.delete(context, tr.id),
+              onDismissed: (direction) => TransactionService.delete(tr),
               child: TransactionItem(
                 transaction: tr,
-                onTap: () => TransactionActions.view(context, tr),
-                onLongPress: () => TransactionActions.update(context, tr),
+                onTap: () => TransactionActions.openModalView(context, tr),
+                onLongPress: () => TransactionActions.openFormEdit(context, tr),
               ),
             );
           },

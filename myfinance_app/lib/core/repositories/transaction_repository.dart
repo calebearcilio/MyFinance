@@ -54,13 +54,14 @@ class TransactionRepository {
   }
 
   TransactionsCompanion _convertFromUpdate(TransactionUpdate transaction) {
-    return TransactionsCompanion.insert(
-      title: transaction.title,
+    return TransactionsCompanion(
+      id: Value(transaction.id),
+      title: Value(transaction.title),
       description: Value(transaction.description),
-      value: transaction.value,
-      date: transaction.date,
-      type: transaction.type,
-      categoryId: transaction.categoryId,
+      value: Value(transaction.value),
+      date: Value(transaction.date),
+      type: Value(transaction.type),
+      categoryId: Value(transaction.categoryId),
     );
   }
 

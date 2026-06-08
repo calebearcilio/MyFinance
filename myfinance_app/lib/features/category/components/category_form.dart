@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfinance_app/core/models/category/category.dart';
 import 'package:myfinance_app/core/models/category/category_create.dart';
 import 'package:myfinance_app/features/category/service/category_service.dart';
@@ -61,7 +62,12 @@ class _CategoryFormState extends State<CategoryForm> {
       if (mounted) {
         Navigator.of(context).pop(true);
       }
-    } catch (e) {}
+    } catch (e) {
+      if (mounted) {
+        Fluttertoast.showToast(msg: "Falha na operação");
+        Navigator.of(context).pop();
+      }
+    }
   }
 
   @override
