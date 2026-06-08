@@ -2,28 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfinance_app/core/models/category/category.dart';
 import 'package:myfinance_app/features/category/components/category_delete_dialog.dart';
-import 'package:myfinance_app/features/category/components/category_form_modal.dart';
+import 'package:myfinance_app/features/category/components/category_form.dart';
 
 class CategoryActions {
-  static Future<bool?> create(BuildContext context) async {
+  static Future<bool?> openForm(
+    BuildContext context,
+  ) async {
     return showDialog<bool>(
       context: context,
-      builder: (context) => CategoryFormModal(),
-    ).then(
-      (value) => Fluttertoast.showToast(
-        msg: value == true ? "Categoria salva" : "Falha na operação",
-      ),
+      builder: (_) => const CategoryForm(),
     );
   }
 
-  static Future<bool?> delete(BuildContext context, Category category) async {
-    return showDialog(
+  static Future<bool?> openDeleteDialog(
+    BuildContext context,
+    Category category,
+  ) async {
+    if (category.isDefault) {
+      Fluttertoast.showToast(msg: "Categorias padrão não podem ser excluídas ");
+      return false;
+    }
+
+    return showDialog<bool>(
       context: context,
-      builder: (BuildContext context) => CategoryDeleteDialog(category: category),
-    ).then(
-      (value) => Fluttertoast.showToast(
-        msg: value == true ? "Categoria excluida" : "Falha na operação",
-      ),
+      builder: (_) => CategoryDeleteDialog(category),
     );
   }
 }

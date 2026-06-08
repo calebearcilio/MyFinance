@@ -4,14 +4,14 @@ import 'package:myfinance_app/core/models/category/category.dart';
 import 'package:myfinance_app/core/services/services_locator.dart';
 
 class CategoryDeleteDialog extends StatelessWidget {
-  final Category category;
+  final Category categoryToDelete;
   final _categoryRepository = ServiceLocator.categoryRepository;
-  CategoryDeleteDialog({super.key, required this.category});
+  CategoryDeleteDialog(this.categoryToDelete, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Excluir Categoria '${category.name}' ?"),
+      title: Text("Excluir Categoria '${categoryToDelete.name}' ?"),
       content: Text(
         "Tem certeza que deseja deletar esta categoria ?",
       ),
@@ -30,7 +30,7 @@ class CategoryDeleteDialog extends StatelessWidget {
           onPressed: () async {
             _categoryRepository
                 .deleteCategory(
-                  category.id,
+                  categoryToDelete.id,
                 )
                 .then(
                   (value) {

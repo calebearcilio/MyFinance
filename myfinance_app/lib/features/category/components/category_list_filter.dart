@@ -88,7 +88,7 @@ class _CategoryListFilterState extends State<CategoryListFilter> {
             if (index == _categories.length) {
               return IconButton(
                 onPressed: () {
-                  CategoryActions.create(context);
+                  CategoryActions.openForm(context);
                   _loadData();
                 },
                 icon: CircleAvatar(
@@ -107,7 +107,7 @@ class _CategoryListFilterState extends State<CategoryListFilter> {
               category: cat,
               onTap: () => _selectCategory(cat.id),
               isSelected: isSelected,
-              onLongPress: () => CategoryActions.delete(context, cat),
+              onLongPress: () => CategoryActions.openDeleteDialog(context, cat),
             );
           },
         ),

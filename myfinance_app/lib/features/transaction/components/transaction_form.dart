@@ -8,6 +8,7 @@ import 'package:myfinance_app/core/models/transaction/transaction_update.dart';
 import 'package:myfinance_app/core/services/services_locator.dart';
 import 'package:myfinance_app/core/models/category/category.dart';
 import 'package:myfinance_app/core/models/transaction/transaction.dart';
+import 'package:myfinance_app/features/common/components/app_forms.dart';
 import 'package:myfinance_app/features/common/components/loading_component.dart';
 
 class TransactionForm extends StatefulWidget {
@@ -25,16 +26,16 @@ class TransactionForm extends StatefulWidget {
 
 class _TransactionFormState extends State<TransactionForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _valueController = TextEditingController(
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _valueController = TextEditingController(
     text: "0,00",
   );
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _timeController = TextEditingController();
+  final _dateController = TextEditingController();
+  final _timeController = TextEditingController();
   List<Category> _categories = [];
   late String _selectedCategoryId;
-  TransactionType _type = TransactionType.expense;
+  TransactionType _selectedType = TransactionType.expense;
 
   final _transactionRepository = ServiceLocator.transactionRepository;
   final _categoriesRepository = ServiceLocator.categoryRepository;
@@ -57,7 +58,7 @@ class _TransactionFormState extends State<TransactionForm> {
       _descriptionController.text = transaction.description ?? "";
       _valueController.text = transaction.value.obterRealSemSimbolo();
       _selectedCategoryId = transaction.category.id;
-      _type = transaction.type;
+      _selectedType = transaction.type;
       _dateController.text = _dateFormat(transaction.date);
       _timeController.text = _timeFormat(transaction.date);
     } else {
@@ -135,7 +136,7 @@ class _TransactionFormState extends State<TransactionForm> {
           date: DateFormat(
             "${_dateFormat(null)} ${_timeFormat(null)}",
           ).parse(dateTimeStr),
-          type: _type,
+          type: _selectedType,
           categoryId: _selectedCategoryId,
         );
 
@@ -151,7 +152,7 @@ class _TransactionFormState extends State<TransactionForm> {
           date: DateFormat(
             "${_dateFormat(null)} ${_timeFormat(null)}",
           ).parse(dateTimeStr),
-          type: _type,
+          type: _selectedType,
           categoryId: _selectedCategoryId,
         );
         result = await _transactionRepository.update(transaction);
@@ -164,41 +165,6 @@ class _TransactionFormState extends State<TransactionForm> {
         Fluttertoast.showToast(msg: "Falha na Operação");
       }
     }
-  }
-
-  void _onCancel() {
-    Navigator.pop(context);
-  }
-
-  String? _validateInput(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return "Obrigatório";
-    }
-    return null;
-  }
-
-  Widget _buildTextField({
-    required String label,
-    String? prefixText,
-    required TextEditingController controller,
-    bool isRequired = true,
-    TextInputType? inputType,
-    List<TextInputFormatter>? masks,
-    Widget? suffixIcon,
-  }) {
-    return TextFormField(
-      readOnly: widget.isReadOnly,
-      keyboardType: inputType,
-      controller: controller,
-      textInputAction: TextInputAction.next,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixText: prefixText,
-        suffixIcon: suffixIcon,
-      ),
-      inputFormatters: masks,
-      validator: isRequired ? _validateInput : null,
-    );
   }
 
   @override
@@ -247,18 +213,18 @@ class _TransactionFormState extends State<TransactionForm> {
 
                 const SizedBox(height: 10),
 
-                _buildTextField(
+                AppTextFormField(
                   label: "Título*",
                   controller: _titleController,
                 ),
 
-                _buildTextField(
+                AppTextFormField(
                   label: "Descrição",
                   controller: _descriptionController,
                   isRequired: false,
                 ),
 
-                _buildTextField(
+                AppTextFormField(
                   label: "Valor*",
                   prefixText: "R\$ ",
                   suffixIcon: Icon(Icons.money),
@@ -275,7 +241,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   children: [
                     Expanded(
                       flex: 3,
-                      child: _buildTextField(
+                      child: AppTextFormField(
                         label: "Data*",
                         controller: _dateController,
                         inputType: TextInputType.number,
@@ -291,7 +257,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     ),
                     Expanded(
                       flex: 2,
-                      child: _buildTextField(
+                      child: AppTextFormField(
                         label: "Hora*",
                         controller: _timeController,
                         inputType: TextInputType.number,
@@ -308,39 +274,24 @@ class _TransactionFormState extends State<TransactionForm> {
                   ],
                 ),
 
-                SizedBox(
-                  height: 60,
-                  child: RadioGroup<TransactionType>(
-                    groupValue: _type,
-                    onChanged: widget.isReadOnly
-                        ? (value) {}
-                        : (value) {
-                            setState(() {
-                              _type = value!;
-                            });
-                          },
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: RadioListTile<TransactionType>(
-                            value: TransactionType.expense,
-                            title: FittedBox(child: Text("Despesa")),
-                          ),
-                        ),
-                        Expanded(
-                          child: RadioListTile<TransactionType>(
-                            value: TransactionType.income,
-                            title: FittedBox(child: Text("Receita")),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                AppRadioGroup<TransactionType>(
+                  selectedValue: _selectedType,
+                  onChanged: widget.isReadOnly
+                      ? (value) {}
+                      : (value) {
+                          setState(() {
+                            _selectedType = value!;
+                          });
+                        },
+                  options: {
+                    TransactionType.expense: "Despesa",
+                    TransactionType.income: "Receita",
+                  },
                 ),
 
                 DropdownButtonFormField<String>(
                   initialValue: _selectedCategoryId,
-                  validator: _validateInput,
+                  validator: appDefaultValidateInput,
                   isExpanded: false,
                   decoration: const InputDecoration(
                     labelText: "Categoria*",
@@ -372,32 +323,7 @@ class _TransactionFormState extends State<TransactionForm> {
                   }).toList(),
                 ),
 
-                if (!widget.isReadOnly)
-                  Row(
-                    spacing: 20,
-                    children: [
-                      Expanded(
-                        child: FilledButton(
-                          style: FilledButton.styleFrom(
-                            backgroundColor: Colors.red,
-                          ),
-                          onPressed: _onCancel,
-                          child: const Text(
-                            "Cancelar",
-                          ),
-                        ),
-                      ),
-
-                      Expanded(
-                        child: FilledButton(
-                          onPressed: _onSave,
-                          child: const Text(
-                            "Salvar",
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                if (!widget.isReadOnly) AppActionsButtons(onSubmit: _onSave),
               ],
             ),
           ),
