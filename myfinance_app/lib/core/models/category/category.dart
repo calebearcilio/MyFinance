@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 enum CategoryType { income, expense }
 
 class Category {
-  late String id;
+  final String id;
   final String name;
   final IconData icon;
   final Color color;
@@ -19,14 +19,6 @@ class Category {
     this.isDefault = false,
   });
   
-  Category.insert({
-    required this.name,
-    required this.icon,
-    required this.color,
-    required this.type,
-    this.isDefault = false,
-  });
-
   factory Category.fromDriftData({
     required String id,
     required String name,

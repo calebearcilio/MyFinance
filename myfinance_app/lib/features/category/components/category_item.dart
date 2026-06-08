@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/core/models/category.dart';
+import 'package:myfinance_app/core/models/category/category.dart';
 
 class CategoryItem extends StatelessWidget {
   final Category category;

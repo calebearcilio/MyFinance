@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfinance_app/core/models/transaction/transaction_create.dart';
+import 'package:myfinance_app/core/models/transaction/transaction_update.dart';
 import 'package:myfinance_app/core/services/services_locator.dart';
-import 'package:myfinance_app/core/models/category.dart';
-import 'package:myfinance_app/core/models/transaction.dart';
+import 'package:myfinance_app/core/models/category/category.dart';
+import 'package:myfinance_app/core/models/transaction/transaction.dart';
 import 'package:myfinance_app/features/common/components/loading_component.dart';
 
 class TransactionForm extends StatefulWidget {
   final Transaction? transaction;
-  final bool? isReadOnly;
+  final bool isReadOnly;
   const TransactionForm({
     super.key,
     this.transaction,
@@ -46,20 +48,20 @@ class _TransactionFormState extends State<TransactionForm> {
       time == null ? "HH:mm" : DateFormat("HH:mm").format(time);
 
   Future<void> _loadData() async {
-    _categories = await _categoriesRepository.getAllCategories();
+    _categories = await _categoriesRepository.getAll();
 
     final transaction = widget.transaction;
 
     if (transaction != null) {
       _titleController.text = transaction.title;
       _descriptionController.text = transaction.description ?? "";
-      _valueController.text = transaction.value.toString();
+      _valueController.text = transaction.value.obterRealSemSimbolo();
       _selectedCategoryId = transaction.category.id;
       _type = transaction.type;
       _dateController.text = _dateFormat(transaction.date);
       _timeController.text = _timeFormat(transaction.date);
     } else {
-      _selectedCategoryId = _categories.isEmpty ? "" : _categories.first.id;
+      _selectedCategoryId = _categories.last.id;
       final now = DateTime.now();
       _dateController.text = _dateFormat(now);
       _timeController.text = _timeFormat(now);
@@ -119,34 +121,47 @@ class _TransactionFormState extends State<TransactionForm> {
       final dateStr = _dateController.text;
       final timeStr = _timeController.text;
       final dateTimeStr = "$dateStr $timeStr";
-
-      final transaction = Transaction.insert(
-        title: _titleController.text.trim(),
-        description: _descriptionController.text.trim().isEmpty
-            ? null
-            : _descriptionController.text.trim(),
-        value: double.parse(
-          _valueController.text.replaceAll(".", "").replaceAll(",", "."),
-        ),
-        date: DateFormat(
-          "${_dateFormat(null)} ${_timeFormat(null)}",
-        ).parse(dateTimeStr),
-        type: _type,
-        categoryId: _selectedCategoryId,
-      );
+      final bool result;
 
       if (widget.transaction == null) {
-        await _transactionRepository.createTransaction(transaction);
+        final transaction = TransactionCreate(
+          title: _titleController.text.trim(),
+          description: _descriptionController.text.trim().isEmpty
+              ? null
+              : _descriptionController.text.trim(),
+          value: double.parse(
+            _valueController.text.replaceAll(".", "").replaceAll(",", "."),
+          ),
+          date: DateFormat(
+            "${_dateFormat(null)} ${_timeFormat(null)}",
+          ).parse(dateTimeStr),
+          type: _type,
+          categoryId: _selectedCategoryId,
+        );
+
+        result = await _transactionRepository.insert(transaction);
       } else {
-        transaction.id = widget.transaction!.id;
-        await _transactionRepository.updateTransaction(transaction);
+        final transaction = TransactionUpdate(
+          id: widget.transaction!.id,
+          title: _titleController.text.trim(),
+          description: _descriptionController.text.trim(),
+          value: double.parse(
+            _valueController.text.replaceAll(".", "").replaceAll(",", "."),
+          ),
+          date: DateFormat(
+            "${_dateFormat(null)} ${_timeFormat(null)}",
+          ).parse(dateTimeStr),
+          type: _type,
+          categoryId: _selectedCategoryId,
+        );
+        result = await _transactionRepository.update(transaction);
       }
       if (mounted) {
-        Navigator.pop(context, true);
+        Navigator.pop(context, result);
       }
     } catch (e) {
       if (mounted) {
-        Fluttertoast.showToast(msg: "Falha ao adicionar transação");
+        Fluttertoast.showToast(msg: "Falha na Operação");
       }
     }
   }
@@ -172,6 +187,7 @@ class _TransactionFormState extends State<TransactionForm> {
     Widget? suffixIcon,
   }) {
     return TextFormField(
+      readOnly: widget.isReadOnly,
       keyboardType: inputType,
       controller: controller,
       textInputAction: TextInputAction.next,
@@ -223,6 +239,8 @@ class _TransactionFormState extends State<TransactionForm> {
                 Text(
                   widget.transaction == null
                       ? "Adicionando Transação"
+                      : widget.isReadOnly
+                      ? "Detalhes da Transação"
                       : "Editando Transação",
                   style: themeContext.textTheme.headlineSmall,
                 ),
@@ -294,23 +312,25 @@ class _TransactionFormState extends State<TransactionForm> {
                   height: 60,
                   child: RadioGroup<TransactionType>(
                     groupValue: _type,
-                    onChanged: (value) {
-                      setState(() {
-                        _type = value!;
-                      });
-                    },
+                    onChanged: widget.isReadOnly
+                        ? (value) {}
+                        : (value) {
+                            setState(() {
+                              _type = value!;
+                            });
+                          },
                     child: Row(
                       children: [
                         Expanded(
                           child: RadioListTile<TransactionType>(
                             value: TransactionType.expense,
-                            title: Text("Despesa"),
+                            title: FittedBox(child: Text("Despesa")),
                           ),
                         ),
                         Expanded(
                           child: RadioListTile<TransactionType>(
                             value: TransactionType.income,
-                            title: Text("Receita"),
+                            title: FittedBox(child: Text("Receita")),
                           ),
                         ),
                       ],
@@ -319,14 +339,19 @@ class _TransactionFormState extends State<TransactionForm> {
                 ),
 
                 DropdownButtonFormField<String>(
-                  initialValue: _categories.isEmpty
-                      ? null
-                      : _categories.first.id,
+                  initialValue: _selectedCategoryId,
                   validator: _validateInput,
                   isExpanded: false,
                   decoration: const InputDecoration(
                     labelText: "Categoria*",
                   ),
+                  onChanged: widget.isReadOnly
+                      ? (value) {}
+                      : (value) {
+                          setState(() {
+                            _selectedCategoryId = value!;
+                          });
+                        },
                   items: _categories.map((category) {
                     return DropdownMenuItem(
                       value: category.id,
@@ -345,38 +370,34 @@ class _TransactionFormState extends State<TransactionForm> {
                       ),
                     );
                   }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCategoryId = value!;
-                    });
-                  },
                 ),
 
-                Row(
-                  spacing: 20,
-                  children: [
-                    Expanded(
-                      child: FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.red,
-                        ),
-                        onPressed: _onCancel,
-                        child: const Text(
-                          "Cancelar",
+                if (!widget.isReadOnly)
+                  Row(
+                    spacing: 20,
+                    children: [
+                      Expanded(
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          onPressed: _onCancel,
+                          child: const Text(
+                            "Cancelar",
+                          ),
                         ),
                       ),
-                    ),
 
-                    Expanded(
-                      child: FilledButton(
-                        onPressed: _onSave,
-                        child: const Text(
-                          "Salvar",
+                      Expanded(
+                        child: FilledButton(
+                          onPressed: _onSave,
+                          child: const Text(
+                            "Salvar",
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
               ],
             ),
           ),

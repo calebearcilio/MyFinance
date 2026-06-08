@@ -1,11 +1,14 @@
 import 'package:drift/drift.dart';
 import 'package:myfinance_app/core/database/app_database.dart';
 import 'package:myfinance_app/core/database/dto/transaction_with_category.dart';
-import 'package:myfinance_app/core/models/category.dart';
-import 'package:myfinance_app/core/models/transaction.dart';
+import 'package:myfinance_app/core/models/category/category.dart';
+import 'package:myfinance_app/core/models/finance/finance.dart';
+import 'package:myfinance_app/core/models/transaction/transaction.dart';
+import 'package:myfinance_app/core/models/transaction/transaction_create.dart';
+import 'package:myfinance_app/core/models/transaction/transaction_filter.dart';
+import 'package:myfinance_app/core/models/transaction/transaction_update.dart';
 
 /// Repository para Transaction
-/// Encapsula acesso aos dados e converte entre modelos Drift e domínio
 class TransactionRepository {
   final AppDatabase _database;
 
@@ -34,143 +37,80 @@ class TransactionRepository {
     );
   }
 
+  List<Transaction> _convertToListDomain(List<TransactionWithCategory> rows) {
+    return rows.map((row) => _convertJoinedToDomain(row)).toList();
+  }
+
   /// Converter Transaction (Domínio) para TransactionsCompanion (Drift)
-  TransactionsCompanion _convertToDrift(Transaction transaction) {
-    return TransactionsCompanion(
-      id: Value(transaction.id),
-      title: Value(transaction.title),
+  TransactionsCompanion _convertToDrift(TransactionCreate transaction) {
+    return TransactionsCompanion.insert(
+      title: transaction.title,
       description: Value(transaction.description),
-      value: Value(transaction.value),
-      date: Value(transaction.date),
-      type: Value(transaction.type),
-      categoryId: Value(transaction.category.id),
-      // createdAt e updatedAt serão gerenciados pelo banco
+      value: transaction.value,
+      date: transaction.date,
+      type: transaction.type,
+      categoryId: transaction.categoryId,
     );
   }
 
-  /// Helper: Enriquece transações com suas categorias
-  Future<List<Transaction>> _enrichTransactionsWithCategories(
-    List<TransactionData> transactions,
-  ) async {
-    final List<Transaction> enriched = [];
-    
-    for (final transaction in transactions) {
-      final category = await _database.categoryDao.getCategoryById(
-        transaction.categoryId,
-      );
-      
-      if (category != null) {
-        enriched.add(
-          Transaction(
-            id: transaction.id,
-            title: transaction.title,
-            description: transaction.description,
-            value: transaction.value,
-            date: transaction.date,
-            type: transaction.type,
-            category: Category(
-              id: category.id,
-              name: category.name,
-              icon: category.icon,
-              color: category.color,
-              type: category.type,
-              isDefault: category.isDefault,
-            ),
-          ),
-        );
-      }
-    }
-    
-    return enriched;
+  TransactionsCompanion _convertFromUpdate(TransactionUpdate transaction) {
+    return TransactionsCompanion.insert(
+      title: transaction.title,
+      description: Value(transaction.description),
+      value: transaction.value,
+      date: transaction.date,
+      type: transaction.type,
+      categoryId: transaction.categoryId,
+    );
   }
-  
 
-  /// Obtém todas as transações com suas categorias
-  Future<List<Transaction>> getAllTransactions() async {
-    final rows = await _database.transactionDao.getAllTransactionsWithCategory();
+  /// Obtém todas as transações com filtros
+  Future<List<Transaction>> getAll([
+    TransactionFilter? filter,
+  ]) async {
+    // Se não há filtro, retorna todas
+    if (filter == null || !filter.hasFilters) {
+      final rows = await _database.transactionDao.getAllTransactions();
+      return rows.map(_convertJoinedToDomain).toList();
+    }
+
+    // Aplicar filtros no DAO
+    final rows = await _database.transactionDao.getTransactions(filter);
     return rows.map(_convertJoinedToDomain).toList();
   }
 
-  /// Obtém uma transação pelo ID
-  Future<Transaction?> getTransactionById(String id) async {
-    final data = await _database.transactionDao.getTransactionById(id);
-    return data != null ? _convertJoinedToDomain(data) : null;
-  }
+  Stream<List<Transaction>> watchAll([TransactionFilter? filter]) {
+    if (filter == null || !filter.hasFilters) {
+      return _database.transactionDao.watchAll().map(_convertToListDomain);
+    }
 
-  /// Obtém transações por categoria
-  Future<List<Transaction>> getTransactionsByCategory(String categoryId) async {
-    final data = await _database.transactionDao.getTransactionsWithCategory(
-      categoryId: categoryId,
-    );
-    return data.map(_convertJoinedToDomain).toList();
-  }
-
-  /// Obtém transações por tipo (com categoria)
-  Future<List<Transaction>> getTransactionsByType(TransactionType type) async {
-    // Melhor: Modificar o DAO para retornar com join
-    // Solução temporária: buscar todas e filtrar
-    final allTransactions = await getAllTransactions();
-    return allTransactions
-        .where((t) => t.type == type)
-        .toList();
-  }
-
-  /// Obtém transações em um intervalo de datas
-  Future<List<Transaction>> getTransactionsByDateRange(
-    DateTime startDate,
-    DateTime endDate,
-  ) async {
-    final data = await _database.transactionDao.getTransactionsByDateRange(
-      startDate,
-      endDate,
-    );
-    // Buscar as categorias para cada transação
-    return await _enrichTransactionsWithCategories(data);
-  }
-
-  /// Obtém transações recentes (últimos N dias)
-  Future<List<Transaction>> getRecentTransactions(int days) async {
-    final data = await _database.transactionDao.getRecentTransactions(days);
-    return await _enrichTransactionsWithCategories(data);
-  }
-
-
-  /// Watch todas as transações (Reativo)
-  Stream<List<Transaction>> watchAllTransactions() {
-    return _database.transactionDao.watchAllTransactionsStream().map(
-      (data) => data.map(_convertJoinedToDomain).toList(),
-    );
-  }
-
-  /// Watch uma transação específica (Reativo)
-  Stream<Transaction?> watchTransactionById(String id) {
-    return _database.transactionDao.watchTransactionByIdStream(id).map(
-      (data) => data != null ? _convertJoinedToDomain(data) : null,
-    );
+    return _database.transactionDao
+        .watchAllWithFilter(filter)
+        .map((data) => data.map(_convertJoinedToDomain).toList());
   }
 
   /// Cria uma nova transação
-  Future<void> createTransaction(Transaction transaction) async {
-    await _database.transactionDao.insertTransaction(
+  Future<bool> insert(TransactionCreate transaction) async {
+    return await _database.transactionDao.insert(
       _convertToDrift(transaction),
     );
   }
 
   /// Cria múltiplas transações
-  Future<void> createTransactions(List<Transaction> transactions) async {
+  Future<bool> insertAll(List<TransactionCreate> transactions) async {
     final driftData = transactions.map(_convertToDrift).toList();
-    await _database.transactionDao.insertTransactions(driftData);
+    return await _database.transactionDao.insertAll(driftData);
   }
 
   /// Atualiza uma transação
-  Future<bool> updateTransaction(Transaction transaction) async {
+  Future<bool> update(TransactionUpdate transaction) async {
     return await _database.transactionDao.updateTransaction(
-      _convertToDrift(transaction),
+      _convertFromUpdate(transaction),
     );
   }
 
   /// Deleta uma transação
-  Future<bool> deleteTransaction(String transactionId) async {
+  Future<bool> delete(String transactionId) async {
     return await _database.transactionDao.deleteTransaction(transactionId);
   }
 
@@ -179,18 +119,8 @@ class TransactionRepository {
     return _database.transactionDao.countTransactions();
   }
 
-  /// Conta transações por categoria
-  Future<int> countTransactionsByCategory(String categoryId) {
-    return _database.transactionDao.countTransactionsByCategory(categoryId);
-  }
-
-  /// Conta transações por tipo
-  Future<int> countTransactionsByType(TransactionType type) {
-    return _database.transactionDao.countTransactionsByType(type.name);
-  }
-
   /// Obtém o valor total de transações
-  Future<double> getTotalAmount({
+  Future<double> getTotalValue({
     TransactionType? type,
     String? categoryId,
   }) async {
@@ -200,16 +130,24 @@ class TransactionRepository {
     );
   }
 
+  Stream<Finance> wacthMonthlyFinance([DateTime? month]) {
+    return _database.transactionDao.watchMonthlyFinance(month);
+  }
+
   /// Obtém resumo mensal
-  Future<Map<String, double>> getMonthlySummary(DateTime month) async {
+  Future<Finance> getMonthlySummary([DateTime? month]) async {
+    month ??= DateTime.now();
+
     final startDate = DateTime(month.year, month.month, 1);
     final endDate = DateTime(month.year, month.month + 1, 0);
-    
-    final transactions = await getTransactionsByDateRange(startDate, endDate);
-    
+
+    final transactions = await getAll(
+      TransactionFilter(startDate: startDate, endDate: endDate),
+    );
+
     double income = 0;
     double expense = 0;
-    
+
     for (final transaction in transactions) {
       if (transaction.type == TransactionType.income) {
         income += transaction.value;
@@ -217,11 +155,7 @@ class TransactionRepository {
         expense += transaction.value;
       }
     }
-    
-    return {
-      'income': income,
-      'expense': expense,
-      'balance': income - expense,
-    };
+
+    return Finance(expense: expense, income: income);
   }
 }

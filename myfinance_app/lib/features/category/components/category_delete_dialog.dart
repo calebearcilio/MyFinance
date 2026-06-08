@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myfinance_app/core/models/category.dart';
+import 'package:myfinance_app/core/models/category/category.dart';
 import 'package:myfinance_app/core/services/services_locator.dart';
 
 class CategoryDeleteDialog extends StatelessWidget {

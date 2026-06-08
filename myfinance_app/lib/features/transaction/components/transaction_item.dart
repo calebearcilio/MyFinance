@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfinance_app/core/models/transaction.dart';
+import 'package:myfinance_app/core/models/transaction/transaction.dart';
 import 'package:myfinance_app/core/utils/date_time_utils.dart';
 
 class TransactionItem extends StatelessWidget {
@@ -57,6 +57,7 @@ class TransactionItem extends StatelessWidget {
 
         trailing: Text(
           valueFormate,
+          maxLines: 1,
           style: themeContext.textTheme.titleMedium!.copyWith(
             color: transaction.type == TransactionType.expense
                 ? Colors.red

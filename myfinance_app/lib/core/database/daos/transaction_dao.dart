@@ -3,7 +3,9 @@ import 'package:myfinance_app/core/database/app_database.dart';
 import 'package:myfinance_app/core/database/dto/transaction_with_category.dart';
 import 'package:myfinance_app/core/database/tables/category_table.dart';
 import 'package:myfinance_app/core/database/tables/transaction_table.dart';
-import 'package:myfinance_app/core/models/transaction.dart';
+import 'package:myfinance_app/core/models/finance/finance.dart';
+import 'package:myfinance_app/core/models/transaction/transaction.dart';
+import 'package:myfinance_app/core/models/transaction/transaction_filter.dart';
 part 'transaction_dao.g.dart';
 
 /// DAO para operações com transações
@@ -17,51 +19,153 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
     with _$TransactionDaoMixin {
   TransactionDao(super.db);
 
-  /// Obtém todas as transações
-  Future<List<TransactionWithCategory>> getAllTransactionsWithCategory() async {
-    final query = select(transactions).join([
-      innerJoin(
-        categories,
-        categories.id.equalsExp(
-          transactions.categoryId,
-        ),
-      ),
-    ]);
-
-    final result = await query.get();
-
-    return result.map((row) {
-      return TransactionWithCategory(
-        transaction: row.readTable(transactions),
-        category: row.readTable(categories),
-      );
-    }).toList();
+  /// Helper para converter [TransactionData] em [TransactionWithCategory]
+  List<TransactionWithCategory> _convertToListDto(List<TypedResult> rows) {
+    return rows
+        .map(
+          (row) => TransactionWithCategory(
+            transaction: row.readTable(transactions),
+            category: row.readTable(categories),
+          ),
+        )
+        .toList();
   }
 
-  /// Obtém uma transação pelo ID
-  Future<TransactionWithCategory?> getTransactionById(String id) async {
+  /// Todas as transações usando filtro
+  Future<List<TransactionWithCategory>> getTransactions(
+    TransactionFilter filter,
+  ) async {
     final query = select(transactions).join([
       innerJoin(
         categories,
         categories.id.equalsExp(transactions.categoryId),
       ),
-    ])..where(transactions.id.equals(id));
+    ]);
+
+    // Tipo
+    if (filter.type != null) {
+      query.where(
+        transactions.type.equals(
+          filter.type!.name,
+        ),
+      );
+    }
+
+    // Categoria
+    if (filter.categoryId != null) {
+      query.where(
+        transactions.categoryId.equals(
+          filter.categoryId!,
+        ),
+      );
+    }
+
+    // Categoria
+    if (filter.transactionId != null) {
+      query.where(
+        transactions.id.equals(
+          filter.transactionId!,
+        ),
+      );
+    }
+
+    // Período
+    if (filter.startDate != null && filter.endDate != null) {
+      query.where(
+        transactions.date.isBetweenValues(
+          filter.startDate!,
+          filter.endDate!,
+        ),
+      );
+    } else if (filter.startDate != null) {
+      query.where(
+        transactions.date.isBiggerOrEqualValue(
+          filter.startDate!,
+        ),
+      );
+    } else if (filter.endDate != null) {
+      query.where(
+        transactions.date.isSmallerOrEqualValue(
+          filter.endDate!,
+        ),
+      );
+    }
+
+    // Valor mínimo
+    if (filter.minValue != null) {
+      query.where(
+        transactions.value.isBiggerOrEqualValue(
+          filter.minValue!,
+        ),
+      );
+    }
+
+    // Valor máximo
+    if (filter.maxValue != null) {
+      query.where(
+        transactions.value.isSmallerOrEqualValue(
+          filter.maxValue!,
+        ),
+      );
+    }
+
+    // Busca textual
+    if (filter.searchTerm != null && filter.searchTerm!.trim().isNotEmpty) {
+      final search = filter.searchTerm!.trim();
+      query.where(
+        transactions.title.like("%$search%") |
+            transactions.description.like("%$search%"),
+      );
+    }
+
+    // Ordenação
+    query.orderBy([
+      OrderingTerm.desc(
+        transactions.date,
+      ),
+    ]);
+
+    // Paginação
+    if (filter.limit != null) {
+      query.limit(
+        filter.limit!,
+        offset: filter.offset ?? 0,
+      );
+    }
 
     final result = await query.get();
 
-    if (result.isEmpty) return null;
-
-    final row = result.first;
-    return TransactionWithCategory(
-      transaction: row.readTable(transactions),
-      category: row.readTable(categories),
-    );
+    return _convertToListDto(result);
   }
 
-  /// Obtém transações por categoria ID
-  Future<List<TransactionWithCategory>> getTransactionsWithCategory({
-    String? categoryId,
-  }) async {
+  /// Obtém todas as transações sem filtragem
+  Future<List<TransactionWithCategory>> getAllTransactions() async {
+    final query = select(transactions).join([
+      innerJoin(
+        categories,
+        categories.id.equalsExp(transactions.categoryId),
+      ),
+    ])..orderBy([OrderingTerm.desc(transactions.date)]);
+
+    final result = await query.get();
+    return _convertToListDto(result);
+  }
+
+  Stream<List<TransactionWithCategory>> watchAll() {
+    final query = select(transactions).join([
+      innerJoin(
+        categories,
+        categories.id.equalsExp(transactions.categoryId),
+      ),
+    ])..orderBy([OrderingTerm.desc(transactions.date)]);
+
+    return query.watch().map(_convertToListDto);
+  }
+
+  /// Watch todas as transações com join (reativo) - VERSÃO CORRETA COM JOIN
+  Stream<List<TransactionWithCategory>> watchAllWithFilter(
+    TransactionFilter filter,
+  ) {
     final query = select(transactions).join([
       innerJoin(
         categories,
@@ -71,9 +175,80 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       ),
     ]);
 
-    if (categoryId != null) {
+    // Tipo
+    if (filter.type != null) {
       query.where(
-        transactions.categoryId.equals(categoryId),
+        transactions.type.equals(
+          filter.type!.name,
+        ),
+      );
+    }
+
+    // Categoria
+    if (filter.categoryId != null) {
+      query.where(
+        transactions.categoryId.equals(
+          filter.categoryId!,
+        ),
+      );
+    }
+
+    // Transação
+    if (filter.transactionId != null) {
+      query.where(
+        transactions.id.equals(
+          filter.transactionId!,
+        ),
+      );
+    }
+
+    // Período
+    if (filter.startDate != null && filter.endDate != null) {
+      query.where(
+        transactions.date.isBetweenValues(
+          filter.startDate!,
+          filter.endDate!,
+        ),
+      );
+    } else if (filter.startDate != null) {
+      query.where(
+        transactions.date.isBiggerOrEqualValue(
+          filter.startDate!,
+        ),
+      );
+    } else if (filter.endDate != null) {
+      query.where(
+        transactions.date.isSmallerOrEqualValue(
+          filter.endDate!,
+        ),
+      );
+    }
+
+    // Valor mínimo
+    if (filter.minValue != null) {
+      query.where(
+        transactions.value.isBiggerOrEqualValue(
+          filter.minValue!,
+        ),
+      );
+    }
+
+    // Valor máximo
+    if (filter.maxValue != null) {
+      query.where(
+        transactions.value.isSmallerOrEqualValue(
+          filter.maxValue!,
+        ),
+      );
+    }
+
+    // Busca textual
+    if (filter.searchTerm != null && filter.searchTerm!.trim().isNotEmpty) {
+      final search = filter.searchTerm!.trim();
+
+      query.where(
+        transactions.title.like('%$search%') |
+            transactions.description.like('%$search%'),
       );
     }
 
@@ -83,166 +258,54 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       ),
     ]);
 
-    final result = await query.get();
-
-    return result.map((row) {
-      return TransactionWithCategory(
-        transaction: row.readTable(transactions),
-        category: row.readTable(categories),
-      );
-    }).toList();
-  }
-
-  /// Obtém transações por tipo (income/expense)
-  Future<List<TransactionData>> getTransactionsByType(String type) {
-    return (select(transactions)
-          ..where((t) => t.type.equals(type))
-          ..orderBy([
-            (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
-          ]))
-        .get();
-  }
-
-  /// Obtém transações em um intervalo de datas
-  Future<List<TransactionData>> getTransactionsByDateRange(
-    DateTime startDate,
-    DateTime endDate,
-  ) {
-    return (select(transactions)
-          ..where((t) => t.date.isBetweenValues(startDate, endDate))
-          ..orderBy([
-            (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
-          ]))
-        .get();
-  }
-
-  /// Obtém transações recentes (últimos N dias)
-  Future<List<TransactionData>> getRecentTransactions(int days) {
-    final startDate = DateTime.now().subtract(Duration(days: days));
-    return getTransactionsByDateRange(startDate, DateTime.now());
-  }
-
-  /// Watch todas as transações (reativo)
-  Stream<List<TransactionData>> watchAllTransactions() {
-    return (select(transactions)..orderBy([
-          (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
-        ]))
-        .watch();
-  }
-
-  /// Watch todas as transações com join (reativo)
-  Stream<List<TransactionWithCategory>> watchAllTransactionsStream() {
-    final query = select(transactions).join([
-      innerJoin(
-        categories,
-        categories.id.equalsExp(transactions.categoryId),
-      ),
-    ]);
-
-    query.orderBy([
-      OrderingTerm.desc(transactions.date),
-    ]);
-
     return query.watch().map((rows) {
       return rows.map((row) {
         return TransactionWithCategory(
-          transaction: row.readTable(transactions),
-          category: row.readTable(categories),
+          transaction: row.readTable(
+            transactions,
+          ),
+          category: row.readTable(
+            categories,
+          ),
         );
       }).toList();
     });
   }
 
-  /// Watch uma transação específica com join (reativo)
-  Stream<TransactionWithCategory?> watchTransactionByIdStream(String id) {
-    final query = select(transactions).join([
-      innerJoin(
-        categories,
-        categories.id.equalsExp(transactions.categoryId),
-      ),
-    ])..where(transactions.id.equals(id));
-
-    return query.watch().map((rows) {
-      if (rows.isEmpty) return null;
-      final row = rows.first;
-      return TransactionWithCategory(
-        transaction: row.readTable(transactions),
-        category: row.readTable(categories),
-      );
-    });
-  }
-
-  /// Watch uma transação específica (reativo)
-  Stream<TransactionData?> watchTransactionById(String id) {
-    return (select(
-      transactions,
-    )..where((t) => t.id.equals(id))).watchSingleOrNull();
-  }
-
-  /// Watch transações por categoria (reativo)
-  Stream<List<TransactionData>> watchTransactionsByCategory(
-    String categoryId,
-  ) {
-    return (select(transactions)
-          ..where((t) => t.categoryId.equals(categoryId))
-          ..orderBy([
-            (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
-          ]))
-        .watch();
-  }
-
-  /// Watch transações por tipo (reativo)
-  Stream<List<TransactionData>> watchTransactionsByType(String type) {
-    return (select(transactions)
-          ..where((t) => t.type.equals(type))
-          ..orderBy([
-            (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
-          ]))
-        .watch();
-  }
-
-  /// Watch transações recentes (reativo)
-  Stream<List<TransactionData>> watchRecentTransactions(int days) {
-    final startDate = DateTime.now().subtract(Duration(days: days));
-    return (select(transactions)
-          ..where((t) => t.date.isBetweenValues(startDate, DateTime.now()))
-          ..orderBy([
-            (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
-          ]))
-        .watch();
-  }
-
   /// Insere uma nova transação
-  Future<void> insertTransaction(TransactionsCompanion transaction) {
-    return into(transactions).insert(transaction);
-  }
-
-  /// Insere múltiplas transações
-  Future<void> insertTransactions(List<TransactionsCompanion> transactionList) {
-    return batch((batch) {
-      batch.insertAll(transactions, transactionList);
-    });
-  }
-
-  /// Atualiza uma transação
-  Future<bool> updateTransaction(TransactionsCompanion transaction) {
-    return update(transactions).replace(transaction);
-  }
-
-  /// Deleta uma transação pelo ID
-  Future<bool> deleteTransaction(String id) async {
-    final result = await (delete(
-      transactions,
-    )..where((t) => t.id.equals(id))).go();
+  Future<bool> insert(TransactionsCompanion transaction) async {
+    final result = await into(transactions).insert(transaction);
     return result > 0;
   }
 
-  /// Deleta todas as transações de uma categoria
-  /// (Usado quando uma categoria é deletada - mas com constraint não deve chegar aqui)
-  Future<int> deleteTransactionsByCategory(String categoryId) {
-    return (delete(
+  /// Insere múltiplas transações
+  Future<bool> insertAll(
+    List<TransactionsCompanion> transactionList,
+  ) async {
+    try {
+      await batch((batch) {
+        batch.insertAll(transactions, transactionList);
+      });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Atualiza uma transação
+  Future<bool> updateTransaction(TransactionsCompanion transaction) async {
+    final result = await (update(
       transactions,
-    )..where((t) => t.categoryId.equals(categoryId))).go();
+    )..where((t) => t.id.equals(transaction.id.value))).write(transaction);
+    return result > 0;
+  }
+
+  /// Deleta uma transação pelo ID
+  Future<bool> deleteTransaction(String transactionId) async {
+    final result = await (delete(
+      transactions,
+    )..where((t) => t.id.equals(transactionId))).go();
+    return result > 0;
   }
 
   /// Conta o número total de transações
@@ -266,19 +329,33 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
     return result.read(countExp) ?? 0;
   }
 
-  /// Conta transações por tipo
-  Future<int> countTransactionsByType(String type) async {
-    final countExp = transactions.id.count();
+  Stream<Finance> watchMonthlyFinance([DateTime? month]) {
+    month ??= DateTime.now();
 
-    final query =
-        selectOnly(
-            transactions,
-          )
-          ..addColumns([countExp])
-          ..where(transactions.type.equals(type));
+    final start = DateTime(month.year, month.month);
+    final end = DateTime(month.year, month.month + 1);
 
-    final result = await query.getSingle();
-    return result.read(countExp) ?? 0;
+    return select(transactions).watch().map((rows) {
+      double income = 0;
+      double expense = 0;
+
+      for (final tr in rows) {
+        if (tr.date.isBefore(start) || tr.date.isAfter(end)) {
+          continue;
+        }
+
+        if (tr.type == TransactionType.income) {
+          income += tr.value;
+        } else {
+          expense += tr.value;
+        }
+      }
+
+      return Finance(
+        income: income,
+        expense: expense,
+      );
+    });
   }
 
   /// Obtém o valor total de transações
@@ -287,7 +364,6 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
     String? categoryId,
   }) async {
     final sumExpression = transactions.value.sum();
-
     final query = selectOnly(transactions)..addColumns([sumExpression]);
 
     if (type != null) {
@@ -297,11 +373,7 @@ class TransactionDao extends DatabaseAccessor<AppDatabase>
       query.where(transactions.categoryId.equals(categoryId));
     }
 
-    // Retrieve the single result, safely defaulting to 0 if the sum is null
-    final result = await query
-        .map((row) => row.read(sumExpression))
-        .getSingle();
-
-    return (result ?? 0).toDouble();
+    final result = await query.getSingle();
+    return result.read(sumExpression) ?? 0.0;
   }
 }

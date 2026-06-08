@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:myfinance_app/core/database/tables/category_table.dart';
-import 'package:myfinance_app/core/models/transaction.dart';
+import 'package:myfinance_app/core/models/transaction/transaction.dart';
 import 'package:uuid/uuid.dart';
 
 @DataClassName('TransactionData')

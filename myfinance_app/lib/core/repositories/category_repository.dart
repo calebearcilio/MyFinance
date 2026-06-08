@@ -1,6 +1,6 @@
-import 'package:drift/drift.dart';
 import 'package:myfinance_app/core/database/app_database.dart';
-import 'package:myfinance_app/core/models/category.dart';
+import 'package:myfinance_app/core/models/category/category.dart';
+import 'package:myfinance_app/core/models/category/category_create.dart';
 
 /// Repository para Category
 /// Encapsula acesso aos dados e converte entre modelos Drift e domínio
@@ -22,81 +22,63 @@ class CategoryRepository {
   }
 
   /// Converter Category (Domínio) para CategoryData (Drift)
-  CategoriesCompanion _convertToDrift(Category category, {bool isInsert = true}) {
-  if (isInsert) {
-    // Para inserção, não incluímos o ID (o banco gera)
+  CategoriesCompanion _convertFromCreate(CategoryCreate category) {
     return CategoriesCompanion.insert(
       name: category.name,
       icon: category.icon,
       color: category.color,
       type: category.type,
     );
-  } else {
-    // Para atualização, incluímos o ID
-    return CategoriesCompanion(
-      id: Value(category.id),
-      name: Value(category.name),
-      icon: Value(category.icon),
-      color: Value(category.color),
-      type: Value(category.type),
-      isDefault: Value(category.isDefault),
-    );
   }
-}
 
   /// Obtém todas as categorias
-  Future<List<Category>> getAllCategories() async {
+  Future<List<Category>> getAll() async {
     final data = await _database.categoryDao.getAllCategories();
     return data.map(_convertToDomain).toList();
   }
 
   /// Obtém uma categoria pelo ID
-  Future<Category?> getCategoryById(String id) async {
+  Future<Category?> getById(String id) async {
     final data = await _database.categoryDao.getCategoryById(id);
     return data != null ? _convertToDomain(data) : null;
   }
 
   /// Obtém categorias por tipo
-  Future<List<Category>> getCategoriesByType(CategoryType type) async {
+  Future<List<Category>> getByType(CategoryType type) async {
     final data = await _database.categoryDao.getCategoriesByType(type.name);
     return data.map(_convertToDomain).toList();
   }
 
   /// Watch todas as categorias (Reativo)
-  Stream<List<Category>> watchAllCategories() {
+  Stream<List<Category>> watchAll() {
     return _database.categoryDao.watchAllCategories().map(
       (data) => data.map(_convertToDomain).toList(),
     );
   }
 
   /// Watch uma categoria específica (Reativo)
-  Stream<Category?> watchCategoryById(String id) {
+  Stream<Category?> watchById(String id) {
     return _database.categoryDao
         .watchCategoryById(id)
         .map((data) => data != null ? _convertToDomain(data) : null);
   }
 
   /// Watch categorias por tipo (Reativo)
-  Stream<List<Category>> watchCategoriesByType(CategoryType type) {
+  Stream<List<Category>> watchByType(CategoryType type) {
     return _database.categoryDao
         .watchCategoriesByType(type.name)
         .map((data) => data.map(_convertToDomain).toList());
   }
 
   /// Cria uma nova categoria
-  Future<void> createCategory(Category category) async {
-    return _database.categoryDao.insertCategory(_convertToDrift(category));
+  Future<void> insert(CategoryCreate category) async {
+    return _database.categoryDao.insertCategory(_convertFromCreate(category));
   }
 
   /// Cria múltiplas categorias
-  Future<void> createCategories(List<Category> categories) async {
-    final driftData = categories.map(_convertToDrift).toList();
+  Future<void> insertAll(List<CategoryCreate> categories) async {
+    final driftData = categories.map(_convertFromCreate).toList();
     return _database.categoryDao.insertCategories(driftData);
-  }
-
-  /// Atualiza uma categoria
-  Future<bool> updateCategory(Category category) async {
-    return _database.categoryDao.updateCategory(_convertToDrift(category, isInsert: false));
   }
 
   /// Verifica se uma categoria é padrão

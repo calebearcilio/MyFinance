@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfinance_app/core/services/services_locator.dart';
 import 'package:myfinance_app/features/category/actions/category_actions.dart';
 import 'package:myfinance_app/features/category/components/category_item.dart';
-import 'package:myfinance_app/core/models/category.dart';
-import 'package:myfinance_app/features/common/model/transaction_filter.dart';
+import 'package:myfinance_app/core/models/category/category.dart';
+import 'package:myfinance_app/core/models/transaction/transaction_filter.dart';
+import 'package:myfinance_app/features/common/components/loading_component.dart';
 
 class CategoryListFilter extends StatefulWidget {
   final TransactionFilter filter;
+  final Function(TransactionFilter newFilter) onFilterChange;
 
   const CategoryListFilter({
     super.key,
     required this.filter,
+    required this.onFilterChange,
   });
 
   @override
@@ -18,51 +22,91 @@ class CategoryListFilter extends StatefulWidget {
 }
 
 class _CategoryListFilterState extends State<CategoryListFilter> {
-  bool loading = true;
-  List<Category> categories = [];
+  List<Category> _categories = [];
+  bool _loading = true;
+  String? _selectedCategoryId;
 
-  void loadData() async {
-    categories = await ServiceLocator.categoryRepository
-        .getAllCategories();
-        
-    setState(() => loading = false);
-    
+  void _loadData() async {
+    setState(() => _loading = true);
+    try {
+      _categories = await ServiceLocator.categoryRepository.getAll();
+      setState(() => _loading = false);
+    } catch (e) {
+      setState(() => _loading = false);
+      Fluttertoast.showToast(msg: "Erro ao carregar categorias");
+    }
+  }
+
+  void _selectCategory(String? categoryId) {
+    setState(
+      () => _selectedCategoryId = _selectedCategoryId == categoryId
+          ? null
+          : categoryId,
+    );
+
+    final newFilter = _selectedCategoryId == null
+        ? widget.filter.clearCategoryOnly()
+        : widget.filter.copyWith(categoryId: _selectedCategoryId);
+
+    widget.onFilterChange(newFilter);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+    _selectedCategoryId = widget.filter.categoryId;
   }
 
   @override
   void didUpdateWidget(covariant CategoryListFilter oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.filter != widget.filter) {
-      loadData();
+    if (oldWidget.filter.categoryId != widget.filter.categoryId) {
+      _selectedCategoryId = widget.filter.categoryId;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return const SliverToBoxAdapter(
+        child: LoadingComponent(),
+      );
+    }
+
     return SliverToBoxAdapter(
       child: Container(
         height: 50,
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: ListView.builder(
           scrollDirection: .horizontal,
-          itemCount: categories.length + 1,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          itemCount: _categories.length + 1,
           itemBuilder: (context, index) {
-            // Adicionar categoria
-            if (index == categories.length) {
+            // botção de dicionar categoria
+            if (index == _categories.length) {
               return IconButton(
-                onPressed: () => CategoryActions.create(context),
+                onPressed: () {
+                  CategoryActions.create(context);
+                  _loadData();
+                },
                 icon: CircleAvatar(
                   backgroundColor: Colors.green,
-                  child: Icon(Icons.add),
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
                 ),
               );
             }
 
-            final cat = categories[index];
+            final cat = _categories[index];
+            final isSelected = cat.id == _selectedCategoryId;
             return CategoryItem(
               category: cat,
-              isSelected: cat.id == widget.filter.categoryId,
+              onTap: () => _selectCategory(cat.id),
+              isSelected: isSelected,
               onLongPress: () => CategoryActions.delete(context, cat),
             );
           },

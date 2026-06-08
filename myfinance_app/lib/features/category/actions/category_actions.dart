@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myfinance_app/core/models/category.dart';
+import 'package:myfinance_app/core/models/category/category.dart';
 import 'package:myfinance_app/features/category/components/category_delete_dialog.dart';
 import 'package:myfinance_app/features/category/components/category_form_modal.dart';
 

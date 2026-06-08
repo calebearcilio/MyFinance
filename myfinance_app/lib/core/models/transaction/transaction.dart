@@ -1,15 +1,15 @@
-import 'package:myfinance_app/core/models/category.dart';
+import 'package:myfinance_app/core/models/category/category.dart';
 
 enum TransactionType { income, expense }
 
 class Transaction {
-  late String id;
+  final String id;
   final String title;
   final double value;
   final String? description;
   final DateTime date;
   final TransactionType type;
-  late Category category;
+  final Category category;
 
   Transaction({
     required this.id,
@@ -20,17 +20,6 @@ class Transaction {
     required this.type,
     required this.category,
   });
-
-  Transaction.insert({
-    required this.title,
-    required this.value,
-    this.description,
-    required this.date,
-    required this.type,
-    required String categoryId,
-  }) {
-    category.id = categoryId;
-  }
 
   double get signedValue => type == TransactionType.income ? value : -value;
 

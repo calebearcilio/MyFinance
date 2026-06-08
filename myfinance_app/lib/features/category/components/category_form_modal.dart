@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
+import 'package:myfinance_app/core/models/category/category_create.dart';
 import 'package:myfinance_app/core/services/services_locator.dart';
-import 'package:myfinance_app/core/models/category.dart';
+import 'package:myfinance_app/core/models/category/category.dart';
 
 class CategoryFormModal extends StatefulWidget {
   const CategoryFormModal({super.key});
@@ -66,15 +66,14 @@ class _CategoryFormModalState extends State<CategoryFormModal> {
     }
 
     try {
-      final category = Category(
-        id: const Uuid().v4(),
+      final category = CategoryCreate(
         name: _nameController.text,
         icon: _selectedIcon!,
         color: _selectedColor!,
         type: _selectedType!,
       );
 
-      await _categoryRepository.createCategory(category);
+      await _categoryRepository.insert(category);
 
       if (!mounted) return;
 

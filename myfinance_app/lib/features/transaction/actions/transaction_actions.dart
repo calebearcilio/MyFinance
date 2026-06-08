@@ -1,44 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myfinance_app/core/models/transaction.dart';
+import 'package:myfinance_app/core/models/transaction/transaction.dart';
+import 'package:myfinance_app/core/services/services_locator.dart';
 import 'package:myfinance_app/features/transaction/components/transaction_form.dart';
 
 class TransactionActions {
   static void create(BuildContext context) async {
-    showDialog<bool>(
+    final result = await showDialog<bool>(
       context: context,
       builder: (context) => TransactionForm(),
-    ).then(
-      (value) => Fluttertoast.showToast(
-        msg: value == true ? "Transação Salva" : "Falha na operação",
-      ),
     );
+
+    if (result == true) {
+      Fluttertoast.showToast(msg: "Transação Salva");
+    }
   }
 
   static void update(
     BuildContext context,
     Transaction transactionToEdit,
   ) async {
-    showDialog<bool>(
+    final result = await showDialog<bool>(
       context: context,
       builder: (context) => TransactionForm(
         transaction: transactionToEdit,
       ),
-    ).then(
-      (value) => Fluttertoast.showToast(
-        msg: value == true ? "Transação Atualizada" : "Falha na operação",
-      ),
     );
+
+    if (result == true) {
+      Fluttertoast.showToast(msg: "Transação Salva");
+    }
   }
 
   static void delete(
     BuildContext context,
     String transactionId,
   ) async {
-    showDialog<bool>(
-      context: context,
-      builder: (context) => TransactionForm(),
+    final result = await ServiceLocator.transactionRepository.delete(
+      transactionId,
     );
+
+    if (result == true) {
+      Fluttertoast.showToast(msg: "Transação Deletada");
+    }
   }
 
   static void view(
