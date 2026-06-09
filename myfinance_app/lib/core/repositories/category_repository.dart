@@ -1,6 +1,7 @@
 import 'package:myfinance_app/core/database/app_database.dart';
 import 'package:myfinance_app/core/models/category/category.dart';
 import 'package:myfinance_app/core/models/category/category_create.dart';
+import 'package:myfinance_app/core/models/category/category_summary.dart';
 
 /// Repository para Category
 /// Encapsula acesso aos dados e converte entre modelos Drift e domínio
@@ -114,6 +115,10 @@ class CategoryRepository {
       categoryId,
     );
     return count > 0;
+  }
+
+  Stream<List<CategorySummary>> watchExpensesByCategory() {
+    return _database.categoryDao.watchExpensesByCategory();
   }
 
   /// Conta o número total de categorias

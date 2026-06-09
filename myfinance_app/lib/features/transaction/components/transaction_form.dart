@@ -153,7 +153,6 @@ class _TransactionFormState extends State<TransactionForm> {
           categoryId: _selectedCategoryId,
         );
 
-        print(transaction);
         await TransactionService.update(transaction);
       }
       if (mounted) {

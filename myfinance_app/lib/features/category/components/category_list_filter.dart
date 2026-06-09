@@ -3,6 +3,7 @@ import 'package:myfinance_app/core/services/services_locator.dart';
 import 'package:myfinance_app/features/category/actions/category_actions.dart';
 import 'package:myfinance_app/features/category/components/category_item.dart';
 import 'package:myfinance_app/core/models/transaction/transaction_filter.dart';
+import 'package:myfinance_app/features/common/components/loading_component.dart';
 
 class CategoryListFilter extends StatefulWidget {
   final TransactionFilter filter;
@@ -54,8 +55,9 @@ class _CategoryListFilterState extends State<CategoryListFilter> {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: ServiceLocator.categoryRepository.watchAll(),
+      initialData: [],
       builder: (context, snapshot) {
-        final categories = snapshot.data!;
+        final categories = snapshot.data ?? [];
         return SliverToBoxAdapter(
           child: Container(
             height: 50,

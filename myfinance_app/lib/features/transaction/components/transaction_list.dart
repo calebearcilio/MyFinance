@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance_app/core/services/services_locator.dart';
+import 'package:myfinance_app/features/common/components/loading_component.dart';
 import 'package:myfinance_app/features/transaction/actions/transaction_actions.dart';
 import 'package:myfinance_app/features/transaction/components/transaction_item.dart';
 import 'package:myfinance_app/core/models/transaction/transaction.dart';
@@ -20,8 +21,9 @@ class _TransactionListState extends State<TransactionList> {
   Widget build(BuildContext context) {
     return StreamBuilder<List<Transaction>>(
       stream: ServiceLocator.transactionRepository.watchAll(widget.filter),
+      initialData: [],
       builder: (context, snapshot) {
-        final transactions = snapshot.data!;
+        final transactions = snapshot.data ?? [];
         if (transactions.isEmpty) {
           return SliverFillRemaining(
             child: Center(
