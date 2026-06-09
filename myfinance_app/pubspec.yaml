@@ -2,8 +2,14 @@ name: myfinance_app
 description: "A new Flutter project."
 publish_to: "none"
 version: 0.1.0+1
+
 config_name:
   name: "My Finance"
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/img/logo.png"
 
 environment:
   sdk: ^3.12.0
@@ -30,6 +36,7 @@ dev_dependencies:
   rename_app: ^1.6.6
   drift_dev: ^2.33.0
   build_runner: ^2.15.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
