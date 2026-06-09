@@ -30,6 +30,18 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
+  MigrationStrategy get migration => MigrationStrategy(
+  onCreate: (Migrator m) async {
+    await m.createAll();
+    await _onCreate();
+  },
+
+  onUpgrade: (Migrator m, int from, int to) async {
+    // futuras migrações
+  },
+);
+
+  @override
   int get schemaVersion => 1;
 
   Future<void> resetDatabase() async {
