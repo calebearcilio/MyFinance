@@ -9,7 +9,7 @@ config_name:
 flutter_launcher_icons:
   android: true
   ios: false
-  image_path: "assets/img/logo.png"
+  image_path: "assets/icons/logo.png"
 
 environment:
   sdk: ^3.12.0
