@@ -4,7 +4,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 extension DateTimeFormatter on DateTime {
   /// Formatar a data de forma amigável
   ///
-  /// ex: Hoje, 13:23, Ontem, 14:49
+  /// ex: Hoje, 13:23; Ontem, 14:49; 01 junho
   String toFriendlyString() {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);

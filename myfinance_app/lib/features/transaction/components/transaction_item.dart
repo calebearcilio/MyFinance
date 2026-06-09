@@ -1,7 +1,7 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:myfinance_app/core/models/transaction/transaction.dart';
-import 'package:myfinance_app/core/utils/date_time_utils.dart';
+import 'package:myfinance_app/features/common/utils/date_time_utils.dart';
 
 class TransactionItem extends StatelessWidget {
   final Transaction transaction;
@@ -17,9 +17,6 @@ class TransactionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final valueFormate = NumberFormat.simpleCurrency().format(
-      transaction.value,
-    );
     final themeContext = Theme.of(context);
 
     return Card(
@@ -56,7 +53,7 @@ class TransactionItem extends StatelessWidget {
         ),
 
         trailing: Text(
-          valueFormate,
+          transaction.value.obterReal(),
           maxLines: 1,
           style: themeContext.textTheme.titleMedium!.copyWith(
             color: transaction.type == TransactionType.expense

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance_app/core/services/services_locator.dart';
-import 'package:myfinance_app/features/common/components/loading_component.dart';
 import 'package:myfinance_app/features/transaction/actions/transaction_actions.dart';
 import 'package:myfinance_app/features/transaction/components/transaction_item.dart';
 import 'package:myfinance_app/core/models/transaction/transaction.dart';
@@ -9,8 +8,13 @@ import 'package:myfinance_app/features/transaction/service/transaction_service.d
 
 class TransactionList extends StatefulWidget {
   final TransactionFilter filter;
+  final bool allowDeletion;
 
-  const TransactionList({super.key, required this.filter});
+  const TransactionList({
+    super.key,
+    required this.filter,
+    this.allowDeletion = true,
+  });
 
   @override
   State<TransactionList> createState() => _TransactionListState();
@@ -39,6 +43,14 @@ class _TransactionListState extends State<TransactionList> {
           itemCount: transactions.length,
           itemBuilder: (context, index) {
             final tr = transactions[index];
+
+            if (!widget.allowDeletion) {
+              return TransactionItem(
+                transaction: tr,
+                onTap: () => TransactionActions.openModalView(context, tr),
+                onLongPress: () => TransactionActions.openFormEdit(context, tr),
+              );
+            }
 
             return Dismissible(
               key: ValueKey(tr),

@@ -67,6 +67,7 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
 
           TransactionList(
+            allowDeletion: false,
             filter: TransactionFilter(
               startDate: DateTime.now().subtract(Duration(days: 7)),
             ),

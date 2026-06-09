@@ -62,7 +62,7 @@ class AppColorScheme {
     onTertiary: AppColors.white,
     tertiaryContainer: Color(0xFF1E3A5F),
     onTertiaryContainer: AppColors.blue100,
-    error: Color(0xFFF87171),
+    error: AppColors.red500,
     onError: AppColors.slate900,
     errorContainer: Color(0xFF7F1D1D),
     onErrorContainer: AppColors.red100,

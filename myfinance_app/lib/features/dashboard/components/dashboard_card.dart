@@ -13,7 +13,7 @@ class DashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final numberFormate = NumberFormat.simpleCurrency();
+    final currencyFormate = NumberFormat.simpleCurrency();
     final themeContext = Theme.of(context);
 
     return SliverToBoxAdapter(
@@ -43,8 +43,12 @@ class DashboardCard extends StatelessWidget {
                   style: themeContext.textTheme.titleLarge,
                 ),
                 Text(
-                  numberFormate.format(finance.balance),
-                  style: themeContext.textTheme.displaySmall,
+                  currencyFormate.format(finance.balance),
+                  style: themeContext.textTheme.displaySmall!.copyWith(
+                    color: finance.balance.isNegative
+                        ? themeContext.colorScheme.error
+                        : themeContext.colorScheme.primary,
+                  ),
                 ),
 
                 SizedBox(height: 10),
@@ -61,12 +65,9 @@ class DashboardCard extends StatelessWidget {
                         ),
                         FittedBox(
                           child: Text(
-                            numberFormate.format(finance.income),
+                            currencyFormate.format(finance.income),
                             style: themeContext.textTheme.headlineSmall!
-                                .copyWith(
-                                  color: themeContext.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                .copyWith(color: Colors.green),
                           ),
                         ),
                       ],
@@ -79,11 +80,9 @@ class DashboardCard extends StatelessWidget {
                         ),
                         FittedBox(
                           child: Text(
-                            numberFormate.format(finance.expense),
+                            currencyFormate.format(finance.expense),
                             style: themeContext.textTheme.headlineSmall!
-                                .copyWith(
-                                  color: themeContext.colorScheme.error,
-                                ),
+                                .copyWith(color: Colors.red),
                           ),
                         ),
                       ],

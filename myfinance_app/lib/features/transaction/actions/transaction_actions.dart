@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfinance_app/core/models/transaction/transaction.dart';
+import 'package:myfinance_app/features/transaction/components/transaction_details.dart';
 import 'package:myfinance_app/features/transaction/components/transaction_form.dart';
 
 class TransactionActions {
@@ -25,14 +26,11 @@ class TransactionActions {
 
   static void openModalView(
     BuildContext context,
-    Transaction transactionToView,
+    Transaction transaction,
   ) async {
     showDialog<bool>(
       context: context,
-      builder: (context) => TransactionForm(
-        transaction: transactionToView,
-        mode: .read,
-      ),
+      builder: (context) => TransactionDetails(transaction: transaction),
     );
   }
 }
