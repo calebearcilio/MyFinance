@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfinance_app/core/models/finance/finance.dart';
-import 'package:myfinance_app/core/themes/app_theme.dart';
+import 'package:myfinance_app/features/common/components/app_section_card.dart';
 
 class DashboardCard extends StatelessWidget {
   final Finance finance;
@@ -17,81 +17,62 @@ class DashboardCard extends StatelessWidget {
     final themeContext = Theme.of(context);
 
     return SliverToBoxAdapter(
-      child: Card(
-        color: Colors.transparent,
-
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: AppTheme.borderDefault,
-            gradient: LinearGradient(
-              colors: [
-                themeContext.colorScheme.tertiary,
-                themeContext.colorScheme.surface,
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+      child: AppSectionCard(
+        child: Column(
+          spacing: 10,
+          children: [
+            Text(
+              "Saldo do mês",
+              style: themeContext.textTheme.titleLarge,
             ),
-          ),
+            Text(
+              currencyFormate.format(finance.balance),
+              style: themeContext.textTheme.displaySmall!.copyWith(
+                color: finance.balance.isNegative ? Colors.red : Colors.green,
+              ),
+            ),
 
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              spacing: 10,
+            SizedBox(height: 10),
+
+            Row(
+              mainAxisAlignment: .spaceEvenly,
+              spacing: 20,
               children: [
-                Text(
-                  "Saldo do mês",
-                  style: themeContext.textTheme.titleLarge,
-                ),
-                Text(
-                  currencyFormate.format(finance.balance),
-                  style: themeContext.textTheme.displaySmall!.copyWith(
-                    color: finance.balance.isNegative
-                        ? themeContext.colorScheme.error
-                        : themeContext.colorScheme.primary,
-                  ),
-                ),
-
-                SizedBox(height: 10),
-
-                Row(
-                  mainAxisAlignment: .spaceEvenly,
-                  spacing: 20,
+                Column(
                   children: [
-                    Column(
-                      children: [
-                        Text(
-                          "Receita",
-                          style: themeContext.textTheme.labelMedium,
-                        ),
-                        FittedBox(
-                          child: Text(
-                            currencyFormate.format(finance.income),
-                            style: themeContext.textTheme.headlineSmall!
-                                .copyWith(color: Colors.green),
-                          ),
-                        ),
-                      ],
+                    Text(
+                      "Receita",
+                      style: themeContext.textTheme.labelMedium,
                     ),
-                    Column(
-                      children: [
-                        Text(
-                          "Despesa",
-                          style: themeContext.textTheme.labelMedium,
+                    FittedBox(
+                      child: Text(
+                        currencyFormate.format(finance.income),
+                        style: themeContext.textTheme.headlineSmall!.copyWith(
+                          color: Colors.green,
                         ),
-                        FittedBox(
-                          child: Text(
-                            currencyFormate.format(finance.expense),
-                            style: themeContext.textTheme.headlineSmall!
-                                .copyWith(color: Colors.red),
-                          ),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      "Despesa",
+                      style: themeContext.textTheme.labelMedium,
+                    ),
+                    FittedBox(
+                      child: Text(
+                        currencyFormate.format(finance.expense),
+                        style: themeContext.textTheme.headlineSmall!.copyWith(
+                          color: Colors.red,
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );

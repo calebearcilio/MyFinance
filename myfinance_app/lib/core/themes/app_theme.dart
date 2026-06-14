@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'app_color_scheme.dart';
 import 'app_text_theme.dart';
 
-class AppTheme {
+abstract final class AppTheme {
   static ThemeData get light =>
       _buildTheme(AppColorScheme.light, AppTextTheme.light);
   static ThemeData get dark =>

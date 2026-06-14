@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
 
-class AppTextTheme {
+abstract final class AppTextTheme {
   static TextTheme get light => _build(AppColors.slate800);
   static TextTheme get dark => _build(AppColors.neutral100);
 

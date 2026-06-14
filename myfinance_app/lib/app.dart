@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:myfinance_app/core/config/app_config.dart';
 import 'package:myfinance_app/core/routes/app_route.dart';
 import 'package:myfinance_app/core/themes/app_theme.dart';
 
 class App extends StatelessWidget {
-  final Locale locale;
-
-  const App({super.key, required this.locale});
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "MyFinance",
+      title: "My Finance",
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      locale: locale,
+      locale: AppConfig.systemLocale,
       routes: AppRoutes.routes(),
-      initialRoute: AppRoutes.home,
     );
   }
 }

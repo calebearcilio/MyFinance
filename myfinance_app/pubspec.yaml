@@ -6,13 +6,8 @@ version: 0.1.0+1
 config_name:
   name: "My Finance"
 
-flutter_launcher_icons:
-  android: true
-  ios: false
-  image_path: "assets/icons/logo.png"
-
 environment:
-  sdk: ^3.11.0
+  sdk: ^3.12.0
 
 dependencies:
   flutter:
@@ -23,11 +18,13 @@ dependencies:
   fl_chart: ^1.2.0
   brasil_fields: ^1.19.0
   mask_text_input_formatter: ^2.9.0
-  fluttertoast: ^9.1.0
   drift: ^2.33.0
   drift_flutter: ^0.3.0
   path_provider: ^2.1.5
   optional: ^6.1.0+1
+  flutter_svg: ^2.3.0
+  flutter_native_splash: ^2.4.8
+  fluttertoast: ^9.1.0
 
 dev_dependencies:
   flutter_test:
@@ -40,13 +37,53 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # assets:
+  #   - assets/logos/logo.png
+  #   - assets/icons/icon.png
+  #   - assets/icons/icon.svg
+  #   - assets/icons/shaded-icon.svg
+  #   - assets/titles/shaded-title-light.svg
+  #   - assets/titles/inner-shaded-title-dark.svg
+
   fonts:
     - family: Inter
       fonts:
-        - asset: assets/fonts/Inter-Regular.ttf
-        - asset: assets/fonts/Inter-Medium.ttf
+        - asset: assets/fonts/inter/Inter-Regular.ttf
+        - asset: assets/fonts/inter/Inter-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Inter-SemiBold.ttf
+        - asset: assets/fonts/inter/Inter-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/Inter-Bold.ttf
+        - asset: assets/fonts/inter/Inter-Bold.ttf
           weight: 700
+
+    - family: InstrumentSans
+      fonts:
+        - asset: assets/fonts/instrument_sans/InstrumentSans-Regular.ttf
+        - asset: assets/fonts/instrument_sans/InstrumentSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/instrument_sans/InstrumentSans-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/instrument_sans/InstrumentSans-Bold.ttf
+          weight: 700
+
+############################## CONFIGURAÇÃO DO ÍCONE DO APP
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/img/logos/logo.png
+
+############################## CONFIGURAÇÃO DA TELA SPLASH
+flutter_native_splash:
+  color: "#F3F4F6"
+  image: assets\img\icons\splash_icon.png
+
+  color_dark: "#081529"
+  image_dark: assets\img\icons\splash_icon.png
+
+  android_12:
+    color: "#F3F4F6"
+    image: assets\img\icons\splash_icon.png
+
+    color_dark: "#081529"
+    image_dark: assets\img\icons\splash_icon.png

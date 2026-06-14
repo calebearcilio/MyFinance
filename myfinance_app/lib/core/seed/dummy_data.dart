@@ -6,7 +6,7 @@ final now = DateTime.now();
 /// Dados fictícios para testes durante desenvolvimento
 /// Estes dados podem ser seedados no banco via seedInitialData()
 /// 
-class DummyTransactions {
+abstract final class DummyTransactions {
   static final List<TransactionsCompanion> income = [
   // Salary
   TransactionsCompanion.insert(

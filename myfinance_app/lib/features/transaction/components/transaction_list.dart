@@ -40,8 +40,12 @@ class _TransactionListState extends State<TransactionList> {
         }
 
         return SliverList.builder(
-          itemCount: transactions.length,
+          itemCount: transactions.length + 1,
           itemBuilder: (context, index) {
+            if (index == transactions.length) {
+              return const SizedBox(height: 50);
+            }
+
             final tr = transactions[index];
 
             if (!widget.allowDeletion) {

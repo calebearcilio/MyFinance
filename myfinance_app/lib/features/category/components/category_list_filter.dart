@@ -61,6 +61,7 @@ class _CategoryListFilterState extends State<CategoryListFilter> {
           child: Container(
             height: 50,
             margin: const EdgeInsets.symmetric(horizontal: 8.0),
+
             child: ListView.builder(
               scrollDirection: .horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 8.0),

@@ -1,23 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:myfinance_app/app.dart';
-import 'package:myfinance_app/core/services/services_locator.dart';
+import 'package:myfinance_app/core/config/app_config.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
-  // Capturar o locale atual do sistema
-  final systemLocale = WidgetsBinding.instance.platformDispatcher.locale;
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // Definir o locale padrão do Intl
-  Intl.defaultLocale = systemLocale.toString();
+  await AppConfig.setup();
 
-  // Inicializar os dados de formatação
-  await initializeDateFormatting(systemLocale.toString());
+  runApp(const App());
 
-  // Inicializar banco de dados e repositórios
-  await ServiceLocator.init();
-
-  runApp(App(locale: systemLocale));
+  FlutterNativeSplash.remove();
 }

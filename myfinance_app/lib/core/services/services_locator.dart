@@ -2,15 +2,13 @@ import 'package:myfinance_app/core/database/app_database.dart';
 import 'package:myfinance_app/core/repositories/category_repository.dart';
 import 'package:myfinance_app/core/repositories/transaction_repository.dart';
 
-/// Service Locator - Fornece acesso único aos repositórios
-/// Implementado como singleton para simplificar a arquitetura
-class ServiceLocator {
+/// Fornece acesso único aos repositórios
+abstract final class ServiceLocator {
   static late AppDatabase _database;
   static late CategoryRepository _categoryRepository;
   static late TransactionRepository _transactionRepository;
 
   /// Inicializa todos os serviços
-  /// Deve ser chamado em main.dart antes de executar o app
   static Future<void> init() async {
     _database = AppDatabase();
     _categoryRepository = CategoryRepository(_database);
