@@ -6,6 +6,7 @@
     "**/.metadata": true,
     "**/analysis_options.yaml": true,
     "**/android": true,
+    "**/.vscode": true,
     "**/pubspec.lock": true
   }
 }
