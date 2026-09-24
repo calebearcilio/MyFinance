@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/features/buget/pages/buget_page.dart';
-import 'package:myfinance_app/features/dashboard/pages/dashboard_page.dart';
-import 'package:myfinance_app/features/report/pages/report_page.dart';
-import 'package:myfinance_app/features/transaction/pages/transactions_page.dart';
+import 'package:my_finance/features/buget/pages/buget_page.dart';
+import 'package:my_finance/features/dashboard/pages/dashboard_page.dart';
+import 'package:my_finance/features/report/pages/report_page.dart';
+import 'package:my_finance/features/transaction/pages/transactions_page.dart';
 
 class TabNavigationPage extends StatefulWidget {
   const TabNavigationPage({super.key});

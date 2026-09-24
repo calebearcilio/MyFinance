@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myfinance_app/core/models/category/category.dart';
-import 'package:myfinance_app/features/category/components/category_delete_dialog.dart';
-import 'package:myfinance_app/features/category/components/category_form.dart';
+import 'package:my_finance/core/models/category/category.dart';
+import 'package:my_finance/features/category/components/category_delete_dialog.dart';
+import 'package:my_finance/features/category/components/category_form.dart';
 
 class CategoryActions {
   static void openFormCreate(

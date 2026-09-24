@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/core/services/services_locator.dart';
-import 'package:myfinance_app/features/transaction/actions/transaction_actions.dart';
-import 'package:myfinance_app/features/transaction/components/transaction_item.dart';
-import 'package:myfinance_app/core/models/transaction/transaction.dart';
-import 'package:myfinance_app/core/models/transaction/transaction_filter.dart';
-import 'package:myfinance_app/features/transaction/service/transaction_service.dart';
+import 'package:my_finance/core/services/services_locator.dart';
+import 'package:my_finance/features/transaction/actions/transaction_actions.dart';
+import 'package:my_finance/features/transaction/components/transaction_item.dart';
+import 'package:my_finance/core/models/transaction/transaction.dart';
+import 'package:my_finance/core/models/transaction/transaction_filter.dart';
+import 'package:my_finance/features/transaction/service/transaction_service.dart';
 
 class TransactionList extends StatefulWidget {
   final TransactionFilter filter;

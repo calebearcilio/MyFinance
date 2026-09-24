@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
-import 'package:myfinance_app/core/database/app_database.dart';
-import 'package:myfinance_app/core/database/tables/category_table.dart';
-import 'package:myfinance_app/core/database/tables/transaction_table.dart';
-import 'package:myfinance_app/core/models/category/category_summary.dart';
+import 'package:my_finance/core/database/app_database.dart';
+import 'package:my_finance/core/database/tables/category_table.dart';
+import 'package:my_finance/core/database/tables/transaction_table.dart';
+import 'package:my_finance/core/models/category/category_summary.dart';
 part 'category_dao.g.dart';
 
 /// DAO para operações com categorias
@@ -89,31 +89,35 @@ class CategoryDao extends DatabaseAccessor<AppDatabase>
   }
 
   Stream<List<CategorySummary>> watchExpensesByCategory() {
-  final query = select(transactions).join([
-    innerJoin(categories, categories.id.equalsExp(transactions.categoryId)),
-  ])
-  ..where(transactions.type.equals('expense'))
-  ..groupBy([categories.id]);
-  
-  // Adicionar colunas agregadas
-  query.addColumns([
-    categories.name,
-    categories.color,
-    transactions.value.sum(),
-  ]);
-  
-  query.orderBy([OrderingTerm.desc(transactions.value.sum())]);
-  
-  return query.watch().map((rows) {
-    return rows.map((row) {
-      return CategorySummary(
-        categoryName: row.readTable(categories).name,
-        color: row.readTable(categories).color,
-        total: row.read(transactions.value.sum()) ?? 0.0,
-      );
-    }).toList();
-  });
-}
+    final query =
+        select(transactions).join([
+            innerJoin(
+              categories,
+              categories.id.equalsExp(transactions.categoryId),
+            ),
+          ])
+          ..where(transactions.type.equals('expense'))
+          ..groupBy([categories.id]);
+
+    // Adicionar colunas agregadas
+    query.addColumns([
+      categories.name,
+      categories.color,
+      transactions.value.sum(),
+    ]);
+
+    query.orderBy([OrderingTerm.desc(transactions.value.sum())]);
+
+    return query.watch().map((rows) {
+      return rows.map((row) {
+        return CategorySummary(
+          categoryName: row.readTable(categories).name,
+          color: row.readTable(categories).color,
+          total: row.read(transactions.value.sum()) ?? 0.0,
+        );
+      }).toList();
+    });
+  }
 
   /// Verifica se uma categoria tem transações associadas
   Future<bool> hasDependentTransactions(String categoryId) async {

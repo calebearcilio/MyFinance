@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/core/models/category/category_summary.dart';
-import 'package:myfinance_app/core/models/finance/finance.dart';
-import 'package:myfinance_app/core/services/services_locator.dart';
-import 'package:myfinance_app/features/common/components/app_scaffold.dart';
-import 'package:myfinance_app/core/models/transaction/transaction_filter.dart';
-import 'package:myfinance_app/features/dashboard/components/card_loading.dart';
-import 'package:myfinance_app/features/dashboard/components/dashboard_card.dart';
-import 'package:myfinance_app/features/charts/components/expense_by_category_chart.dart';
-import 'package:myfinance_app/features/transaction/components/transaction_list.dart';
+import 'package:my_finance/core/models/category/category_summary.dart';
+import 'package:my_finance/core/models/finance/finance.dart';
+import 'package:my_finance/core/services/services_locator.dart';
+import 'package:my_finance/features/common/components/app_scaffold.dart';
+import 'package:my_finance/core/models/transaction/transaction_filter.dart';
+import 'package:my_finance/features/dashboard/components/card_loading.dart';
+import 'package:my_finance/features/dashboard/components/dashboard_card.dart';
+import 'package:my_finance/features/charts/components/expense_by_category_chart.dart';
+import 'package:my_finance/features/transaction/components/transaction_list.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});

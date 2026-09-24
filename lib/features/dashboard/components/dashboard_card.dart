@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfinance_app/core/models/finance/finance.dart';
-import 'package:myfinance_app/features/common/components/app_section_card.dart';
+import 'package:my_finance/core/models/finance/finance.dart';
+import 'package:my_finance/features/common/components/app_section_card.dart';
 
 class DashboardCard extends StatelessWidget {
   final Finance finance;

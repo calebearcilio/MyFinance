@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/core/models/category/category.dart';
+import 'package:my_finance/core/models/category/category.dart';
 
 class CategoryCreate {
   final String name;

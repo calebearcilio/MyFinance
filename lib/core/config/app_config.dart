@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:myfinance_app/core/services/services_locator.dart';
+import 'package:my_finance/core/services/services_locator.dart';
 
 /// Configuração geral da aplicação
 abstract final class AppConfig {

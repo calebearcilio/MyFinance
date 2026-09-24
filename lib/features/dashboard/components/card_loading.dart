@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/core/themes/app_theme.dart';
-import 'package:myfinance_app/features/common/components/loading_component.dart';
+import 'package:my_finance/core/themes/app_theme.dart';
+import 'package:my_finance/features/common/components/loading_component.dart';
 
 class CardLoading extends StatelessWidget {
   const CardLoading({super.key});

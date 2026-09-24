@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/core/config/app_config.dart';
-import 'package:myfinance_app/core/routes/app_route.dart';
-import 'package:myfinance_app/core/themes/app_theme.dart';
+import 'package:my_finance/core/config/app_config.dart';
+import 'package:my_finance/core/routes/app_route.dart';
+import 'package:my_finance/core/themes/app_theme.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

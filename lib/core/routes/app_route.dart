@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/features/common/pages/tab_navigation_page.dart';
-import 'package:myfinance_app/features/profile/pages/profile_page.dart';
+import 'package:my_finance/features/common/pages/tab_navigation_page.dart';
+import 'package:my_finance/features/profile/pages/profile_page.dart';
 
 abstract final class AppRoutes {
   static const String home = "/";

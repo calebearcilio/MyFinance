@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/features/category/components/category_list_filter.dart';
-import 'package:myfinance_app/features/common/components/app_scaffold.dart';
-import 'package:myfinance_app/features/transaction/actions/transaction_actions.dart';
-import 'package:myfinance_app/features/transaction/components/transaction_list.dart';
-import 'package:myfinance_app/core/models/transaction/transaction_filter.dart';
+import 'package:my_finance/features/category/components/category_list_filter.dart';
+import 'package:my_finance/features/common/components/app_scaffold.dart';
+import 'package:my_finance/features/transaction/actions/transaction_actions.dart';
+import 'package:my_finance/features/transaction/components/transaction_list.dart';
+import 'package:my_finance/core/models/transaction/transaction_filter.dart';
 
 class TransactionsPage extends StatefulWidget {
   const TransactionsPage({super.key});

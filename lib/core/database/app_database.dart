@@ -1,16 +1,16 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/material.dart' hide Table, Column;
-import 'package:myfinance_app/core/database/converters/color_converter.dart';
-import 'package:myfinance_app/core/database/converters/icon_converter.dart';
-import 'package:myfinance_app/core/database/daos/category_dao.dart';
-import 'package:myfinance_app/core/database/daos/transaction_dao.dart';
-import 'package:myfinance_app/core/database/tables/category_table.dart';
-import 'package:myfinance_app/core/database/tables/transaction_table.dart';
-import 'package:myfinance_app/core/models/category/category.dart';
-import 'package:myfinance_app/core/models/transaction/transaction.dart';
-import 'package:myfinance_app/core/seed/categories_default.dart';
-import 'package:myfinance_app/core/seed/dummy_data.dart';
+import 'package:my_finance/core/database/converters/color_converter.dart';
+import 'package:my_finance/core/database/converters/icon_converter.dart';
+import 'package:my_finance/core/database/daos/category_dao.dart';
+import 'package:my_finance/core/database/daos/transaction_dao.dart';
+import 'package:my_finance/core/database/tables/category_table.dart';
+import 'package:my_finance/core/database/tables/transaction_table.dart';
+import 'package:my_finance/core/models/category/category.dart';
+import 'package:my_finance/core/models/transaction/transaction.dart';
+import 'package:my_finance/core/seed/categories_default.dart';
+import 'package:my_finance/core/seed/dummy_data.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -31,15 +31,15 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-  onCreate: (Migrator m) async {
-    await m.createAll();
-    await _onCreate();
-  },
+    onCreate: (Migrator m) async {
+      await m.createAll();
+      await _onCreate();
+    },
 
-  onUpgrade: (Migrator m, int from, int to) async {
-    // futuras migrações
-  },
-);
+    onUpgrade: (Migrator m, int from, int to) async {
+      // futuras migrações
+    },
+  );
 
   @override
   int get schemaVersion => 1;

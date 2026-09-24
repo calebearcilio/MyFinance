@@ -1,7 +1,7 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/core/models/transaction/transaction.dart';
-import 'package:myfinance_app/features/common/utils/date_time_utils.dart';
+import 'package:my_finance/core/models/transaction/transaction.dart';
+import 'package:my_finance/features/common/utils/date_time_utils.dart';
 
 class TransactionItem extends StatelessWidget {
   final Transaction transaction;

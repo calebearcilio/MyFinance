@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/core/models/category/category_summary.dart';
-import 'package:myfinance_app/features/common/components/app_section_card.dart';
+import 'package:my_finance/core/models/category/category_summary.dart';
+import 'package:my_finance/features/common/components/app_section_card.dart';
 
 class ExpenseByCategoryChart extends StatelessWidget {
   final List<CategorySummary> summary;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/core/themes/app_theme.dart';
+import 'package:my_finance/core/themes/app_theme.dart';
 
 class AppSectionCard extends StatelessWidget {
   final Widget child;

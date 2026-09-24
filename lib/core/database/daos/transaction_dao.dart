@@ -1,11 +1,11 @@
 import 'package:drift/drift.dart';
-import 'package:myfinance_app/core/database/app_database.dart';
-import 'package:myfinance_app/core/database/dto/transaction_with_category.dart';
-import 'package:myfinance_app/core/database/tables/category_table.dart';
-import 'package:myfinance_app/core/database/tables/transaction_table.dart';
-import 'package:myfinance_app/core/models/finance/finance.dart';
-import 'package:myfinance_app/core/models/transaction/transaction.dart';
-import 'package:myfinance_app/core/models/transaction/transaction_filter.dart';
+import 'package:my_finance/core/database/app_database.dart';
+import 'package:my_finance/core/database/dto/transaction_with_category.dart';
+import 'package:my_finance/core/database/tables/category_table.dart';
+import 'package:my_finance/core/database/tables/transaction_table.dart';
+import 'package:my_finance/core/models/finance/finance.dart';
+import 'package:my_finance/core/models/transaction/transaction.dart';
+import 'package:my_finance/core/models/transaction/transaction_filter.dart';
 part 'transaction_dao.g.dart';
 
 /// DAO para operações com transações

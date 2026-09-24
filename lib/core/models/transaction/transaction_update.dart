@@ -1,4 +1,4 @@
-import 'package:myfinance_app/core/models/transaction/transaction.dart';
+import 'package:my_finance/core/models/transaction/transaction.dart';
 
 class TransactionUpdate {
   final String id;
@@ -18,7 +18,6 @@ class TransactionUpdate {
     required this.type,
     required this.categoryId,
   });
-
 
   @override
   String toString() {

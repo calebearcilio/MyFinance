@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:myfinance_app/core/routes/app_route.dart';
+import 'package:my_finance/core/routes/app_route.dart';
 
 @Deprecated("Sem uso")
 class SplashPage extends StatefulWidget {

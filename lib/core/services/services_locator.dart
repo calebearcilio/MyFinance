@@ -1,6 +1,6 @@
-import 'package:myfinance_app/core/database/app_database.dart';
-import 'package:myfinance_app/core/repositories/category_repository.dart';
-import 'package:myfinance_app/core/repositories/transaction_repository.dart';
+import 'package:my_finance/core/database/app_database.dart';
+import 'package:my_finance/core/repositories/category_repository.dart';
+import 'package:my_finance/core/repositories/transaction_repository.dart';
 
 /// Fornece acesso único aos repositórios
 abstract final class ServiceLocator {

@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfinance_app/core/models/transaction/transaction_create.dart';
-import 'package:myfinance_app/core/models/transaction/transaction_update.dart';
-import 'package:myfinance_app/core/services/services_locator.dart';
-import 'package:myfinance_app/core/models/category/category.dart';
-import 'package:myfinance_app/core/models/transaction/transaction.dart';
-import 'package:myfinance_app/features/common/components/app_forms.dart';
-import 'package:myfinance_app/features/common/components/loading_component.dart';
-import 'package:myfinance_app/features/transaction/service/transaction_service.dart';
+import 'package:my_finance/core/models/transaction/transaction_create.dart';
+import 'package:my_finance/core/models/transaction/transaction_update.dart';
+import 'package:my_finance/core/services/services_locator.dart';
+import 'package:my_finance/core/models/category/category.dart';
+import 'package:my_finance/core/models/transaction/transaction.dart';
+import 'package:my_finance/features/common/components/app_forms.dart';
+import 'package:my_finance/features/common/components/loading_component.dart';
+import 'package:my_finance/features/transaction/service/transaction_service.dart';
 
 class TransactionForm extends StatefulWidget {
   final Transaction? transaction;

@@ -1,7 +1,7 @@
-import 'package:myfinance_app/core/models/transaction/transaction.dart';
-import 'package:myfinance_app/core/models/transaction/transaction_create.dart';
-import 'package:myfinance_app/core/models/transaction/transaction_update.dart';
-import 'package:myfinance_app/core/services/services_locator.dart';
+import 'package:my_finance/core/models/transaction/transaction.dart';
+import 'package:my_finance/core/models/transaction/transaction_create.dart';
+import 'package:my_finance/core/models/transaction/transaction_update.dart';
+import 'package:my_finance/core/services/services_locator.dart';
 
 class TransactionService {
   static Future<void> create(
@@ -19,7 +19,7 @@ class TransactionService {
       transaction.id,
     );
   }
-  
+
   static Future<void> update(
     TransactionUpdate transaction,
   ) async {

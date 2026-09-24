@@ -1,7 +1,7 @@
-import 'package:myfinance_app/core/database/app_database.dart';
-import 'package:myfinance_app/core/models/category/category.dart';
-import 'package:myfinance_app/core/models/category/category_create.dart';
-import 'package:myfinance_app/core/models/category/category_summary.dart';
+import 'package:my_finance/core/database/app_database.dart';
+import 'package:my_finance/core/models/category/category.dart';
+import 'package:my_finance/core/models/category/category_create.dart';
+import 'package:my_finance/core/models/category/category_summary.dart';
 
 /// Repository para Category
 /// Encapsula acesso aos dados e converte entre modelos Drift e domínio

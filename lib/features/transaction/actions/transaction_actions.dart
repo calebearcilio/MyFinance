@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/core/models/transaction/transaction.dart';
-import 'package:myfinance_app/features/transaction/components/transaction_details.dart';
-import 'package:myfinance_app/features/transaction/components/transaction_form.dart';
+import 'package:my_finance/core/models/transaction/transaction.dart';
+import 'package:my_finance/features/transaction/components/transaction_details.dart';
+import 'package:my_finance/features/transaction/components/transaction_form.dart';
 
 class TransactionActions {
   static void openFormCreate(BuildContext context) async {

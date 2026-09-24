@@ -1,12 +1,12 @@
 import 'package:drift/drift.dart';
-import 'package:myfinance_app/core/database/app_database.dart';
-import 'package:myfinance_app/core/database/dto/transaction_with_category.dart';
-import 'package:myfinance_app/core/models/category/category.dart';
-import 'package:myfinance_app/core/models/finance/finance.dart';
-import 'package:myfinance_app/core/models/transaction/transaction.dart';
-import 'package:myfinance_app/core/models/transaction/transaction_create.dart';
-import 'package:myfinance_app/core/models/transaction/transaction_filter.dart';
-import 'package:myfinance_app/core/models/transaction/transaction_update.dart';
+import 'package:my_finance/core/database/app_database.dart';
+import 'package:my_finance/core/database/dto/transaction_with_category.dart';
+import 'package:my_finance/core/models/category/category.dart';
+import 'package:my_finance/core/models/finance/finance.dart';
+import 'package:my_finance/core/models/transaction/transaction.dart';
+import 'package:my_finance/core/models/transaction/transaction_create.dart';
+import 'package:my_finance/core/models/transaction/transaction_filter.dart';
+import 'package:my_finance/core/models/transaction/transaction_update.dart';
 
 /// Repository para Transaction
 class TransactionRepository {

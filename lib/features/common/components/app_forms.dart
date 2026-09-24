@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myfinance_app/features/common/components/loading_component.dart';
+import 'package:my_finance/features/common/components/loading_component.dart';
 
 /// Modo do formulário: edit, create, update
 enum FormMode { read, edit, create, update }

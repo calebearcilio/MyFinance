@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/core/database/app_database.dart';
+import 'package:my_finance/core/database/app_database.dart';
 
 abstract final class CategoriesDefault {
   static final expenses = [

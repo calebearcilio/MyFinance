@@ -1,4 +1,4 @@
-import 'package:myfinance_app/core/models/transaction/transaction.dart';
+import 'package:my_finance/core/models/transaction/transaction.dart';
 
 class TransactionFilter {
   final TransactionType? type;

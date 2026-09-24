@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfinance_app/core/routes/app_route.dart';
+import 'package:my_finance/core/routes/app_route.dart';
 
 class AppScaffold extends StatelessWidget {
   final String title;

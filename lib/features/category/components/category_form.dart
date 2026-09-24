@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myfinance_app/core/models/category/category.dart';
-import 'package:myfinance_app/core/models/category/category_create.dart';
-import 'package:myfinance_app/features/category/service/category_service.dart';
-import 'package:myfinance_app/features/common/components/app_forms.dart';
+import 'package:my_finance/core/models/category/category.dart';
+import 'package:my_finance/core/models/category/category_create.dart';
+import 'package:my_finance/features/category/service/category_service.dart';
+import 'package:my_finance/features/common/components/app_forms.dart';
 
 class CategoryForm extends StatefulWidget {
   const CategoryForm({super.key});

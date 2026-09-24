@@ -1,6 +1,6 @@
-import 'package:myfinance_app/core/models/category/category.dart';
-import 'package:myfinance_app/core/models/category/category_create.dart';
-import 'package:myfinance_app/core/services/services_locator.dart';
+import 'package:my_finance/core/models/category/category.dart';
+import 'package:my_finance/core/models/category/category_create.dart';
+import 'package:my_finance/core/services/services_locator.dart';
 
 class CategoryService {
   static Future<void> create(

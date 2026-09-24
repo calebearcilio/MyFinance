@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myfinance_app/core/services/services_locator.dart';
-import 'package:myfinance_app/features/category/actions/category_actions.dart';
-import 'package:myfinance_app/features/category/components/category_item.dart';
-import 'package:myfinance_app/core/models/transaction/transaction_filter.dart';
+import 'package:my_finance/core/services/services_locator.dart';
+import 'package:my_finance/features/category/actions/category_actions.dart';
+import 'package:my_finance/features/category/components/category_item.dart';
+import 'package:my_finance/core/models/transaction/transaction_filter.dart';
 
 class CategoryListFilter extends StatefulWidget {
   final TransactionFilter filter;

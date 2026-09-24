@@ -1,3 +1,3 @@
-# myfinance_app
+# My Finance
 
-A new Flutter project.
+App FLutter de gerenciamento de finanças pessoais.

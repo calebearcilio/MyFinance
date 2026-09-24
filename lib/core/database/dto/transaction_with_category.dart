@@ -1,4 +1,4 @@
-import 'package:myfinance_app/core/database/app_database.dart';
+import 'package:my_finance/core/database/app_database.dart';
 
 class TransactionWithCategory {
   final TransactionData transaction;
