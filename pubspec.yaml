@@ -71,19 +71,19 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: false
-  image_path: assets/img/logos/logo.png
+  image_path: assets/img/logos/logo2.png
 
 ############################## CONFIGURAÇÃO DA TELA SPLASH
 flutter_native_splash:
   color: "#F3F4F6"
-  image: assets\img\icons\splash_icon.png
+  image: assets/img/icons/splash_icon2.png
 
   color_dark: "#081529"
-  image_dark: assets\img\icons\splash_icon.png
+  image_dark: assets/img/icons/splash_icon2.png
 
   android_12:
     color: "#F3F4F6"
-    image: assets\img\icons\splash_icon.png
+    image: assets/img/icons/splash_icon2.png
 
     color_dark: "#081529"
-    image_dark: assets\img\icons\splash_icon.png
+    image_dark: assets/img/icons/splash_icon2.png
