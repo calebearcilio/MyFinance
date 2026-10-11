@@ -25,6 +25,10 @@ dependencies:
   flutter_svg: ^2.3.0
   flutter_native_splash: ^2.4.8
   fluttertoast: ^9.1.0
+  provider: ^6.1.5+1
+  firebase_core: ^4.15.0
+  firebase_auth: ^6.7.0
+  firebase_database: ^12.6.0
 
 dev_dependencies:
   flutter_test:
@@ -38,8 +42,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # assets:
-  #   - assets/logos/logo.png
+  assets:
+    - assets/img/title_login_screen.png
   #   - assets/icons/icon.png
   #   - assets/icons/icon.svg
   #   - assets/icons/shaded-icon.svg
