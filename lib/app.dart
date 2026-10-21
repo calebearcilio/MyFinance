@@ -13,6 +13,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.system,
       locale: AppConfig.systemLocale,
       routes: AppRoutes.routes(),
     );

@@ -1,82 +1,91 @@
-import 'package:drift/drift.dart';
-import 'package:flutter/material.dart';
-import 'package:my_finance/core/database/app_database.dart';
+import 'package:my_finance/core/data/enums/flow_type.dart';
+import 'package:my_finance/features/category/domain/entities/category.dart';
 
 abstract final class CategoriesDefault {
-  static final expenses = [
-    CategoriesCompanion.insert(
-      id: Value("food"),
+  static final List<Category> expenses = [
+    Category(
+      id: "food",
       name: "Alimentação",
-      icon: Icons.restaurant,
-      color: const Color.fromARGB(255, 226, 75, 74),
-      isDefault: Value(true),
-      type: .expense,
+      emoji: "🍽️",
+      colorHex: "#E24B4A",
+      isDefault: true,
+      type: FlowType.expense,
     ),
-    CategoriesCompanion.insert(
-      id: Value("transport"),
+    Category(
+      id: "transport",
       name: "Transporte",
-      icon: Icons.directions_car,
-      color: const Color.fromARGB(255, 55, 138, 221),
-      isDefault: Value(true),
-      type: .expense,
+      emoji: "🚗",
+      colorHex: "#378ADD",
+      isDefault: true,
+      type: FlowType.expense,
     ),
-    CategoriesCompanion.insert(
-      id: Value("health"),
+    Category(
+      id: "health",
       name: "Saúde",
-      icon: Icons.medical_services,
-      color: const Color.fromARGB(255, 29, 158, 117),
-      isDefault: Value(true),
-      type: .expense,
+      emoji: "🏥",
+      colorHex: "#1D9E75",
+      isDefault: true,
+      type: FlowType.expense,
     ),
-    CategoriesCompanion.insert(
-      id: Value("education"),
+    Category(
+      id: "education",
       name: "Educação",
-      icon: Icons.school,
-      color: const Color.fromARGB(255, 127, 119, 221),
-      isDefault: Value(true),
-      type: .expense,
+      emoji: "🎓",
+      colorHex: "#7F77DD",
+      isDefault: true,
+      type: FlowType.expense,
     ),
-    CategoriesCompanion.insert(
-      id: Value("leisure"),
+    Category(
+      id: "leisure",
       name: "Lazer",
-      icon: Icons.fitness_center,
-      color: const Color.fromARGB(255, 239, 159, 39),
-      isDefault: Value(true),
-      type: .expense,
+      emoji: "🏋️",
+      colorHex: "#EF9F27",
+      isDefault: true,
+      type: FlowType.expense,
     ),
-    CategoriesCompanion.insert(
-      id: Value("shopping"),
+    Category(
+      id: "shopping",
       name: "Compras",
-      icon: Icons.shopping_cart_sharp,
-      color: const Color.fromARGB(255, 212, 83, 126),
-      isDefault: Value(true),
-      type: .expense,
+      emoji: "🛒",
+      colorHex: "#D4537E",
+      isDefault: true,
+      type: FlowType.expense,
     ),
   ];
-  static final income = [
-    CategoriesCompanion.insert(
-      id: Value("salary"),
+
+  static final List<Category> income = [
+    Category(
+      id: "salary",
       name: "Salário",
-      icon: Icons.wallet,
-      color: const Color.fromARGB(255, 16, 194, 37),
-      isDefault: Value(true),
-      type: .income,
+      emoji: "💼",
+      colorHex: "#10C225",
+      isDefault: true,
+      type: FlowType.income,
     ),
-    CategoriesCompanion.insert(
-      id: Value("investment"),
+    Category(
+      id: "investment",
       name: "Investimentos",
-      icon: Icons.ssid_chart_rounded,
-      color: const Color.fromARGB(255, 118, 12, 199),
-      isDefault: Value(true),
-      type: .income,
+      emoji: "📈",
+      colorHex: "#760CC7",
+      isDefault: true,
+      type: FlowType.income,
     ),
-    CategoriesCompanion.insert(
-      id: Value("bonus"),
+    Category(
+      id: "bonus",
       name: "Bônus",
-      icon: Icons.wallet_giftcard,
-      color: const Color.fromARGB(255, 42, 35, 226),
-      isDefault: Value(true),
-      type: .income,
+      emoji: "🎁",
+      colorHex: "#2A23E2",
+      isDefault: true,
+      type: FlowType.income,
     ),
   ];
+
+  static List<Category> get all => [...expenses, ...income];
+
+  static Category getById(String id) {
+    return all.firstWhere(
+      (cat) => cat.id == id,
+      orElse: () => expenses.first,
+    );
+  }
 }

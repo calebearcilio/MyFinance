@@ -1,0 +1,2 @@
+enum FlowType { income, expense }
+

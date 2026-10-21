@@ -1,7 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:my_finance/core/services/services_locator.dart';
+import 'package:my_finance/core/database/database_config.dart';
+import 'package:my_finance/firebase_options.dart';
 
 /// Configuração geral da aplicação
 abstract final class AppConfig {
@@ -19,11 +21,16 @@ abstract final class AppConfig {
 
   /// Inicializa todas as dependências da aplicação
   static Future<void> setup() async {
-    // Inicializar banco de dados e repositórios
-    await ServiceLocator.init();
-
     // Capturar o locale atual do sistema
     _systemLocale = WidgetsBinding.instance.platformDispatcher.locale;
+
+    // Sync Firebase realtime database
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    // Init local database
+    await DatabaseConfig.db;
 
     // Definir o locale padrão do Intl
     Intl.defaultLocale = _systemLocale.toString();
